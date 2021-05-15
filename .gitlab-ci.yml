@@ -2,8 +2,6 @@ image: node:lts-alpine
 
 variables:
   ENVIRONMENT: $CI_COMMIT_BRANCH
-  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
 
 
 # test-job:
@@ -23,4 +21,6 @@ deploy:
   script:
     - ls -alth
     - echo "$AWS_ACCESS_KEY_ID"
+    - echo "$ENVIRONMENT"
+    - echo "$CI_COMMIT_BRANCH"
     - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy
