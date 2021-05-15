@@ -1,9 +1,12 @@
+image: node:lts-alpine
+
 variables:
   ENVIRONMENT: $CI_COMMIT_BRANCH
 
 build-job:
   stage: build
   script:
+    - npm ci
     - npm run build
 
 # test-job:
