@@ -13,7 +13,7 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "sls:local": "ENVIRONMENT=dev serverless client deploy --no-confirm"
+    "sls:deploy": "serverless client deploy --no-confirm"
   },
   "dependencies": {
     "gatsby": "^3.4.1",
