@@ -2,12 +2,12 @@ service: static-bickup
 provider: 
   name: aws
   region: ap-southeast-1
-
 plugins:
   - serverless-finch
 
 custom:
   client:
-    bucketName: ${env:ENVIRONMENT}-static-bickup-bucket # (see Configuration Parameters below)
+    region: ap-southeast-1
+    bucketName: ${env:ENVIRONMENT}-static-bickup # (see Configuration Parameters below)
     distributionFolder: public
     # [other configuration parameters] (see Configuration Parameters below)

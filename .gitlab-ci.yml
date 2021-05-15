@@ -20,4 +20,4 @@ deploy:
     - npm run build
   script:
     - ls -alth
-    - ENVIRONMENT="$ENVIRONMENT" npm run sls -- deploy
+    - ENVIRONMENT="$ENVIRONMENT" serverless client deploy --no-confirm 

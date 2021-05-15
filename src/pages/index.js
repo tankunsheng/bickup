@@ -131,7 +131,7 @@ const IndexPage = () => {
     <main style={pageStyles}>
       <title>Bickup Home Page</title>
       <h1 style={headingStyles}>
-        Congratulations
+        Congratulations!!!! Test
         <br />
         <span style={headingAccentStyles}>— you just made a Gatsby site! </span>
         <span role="img" aria-label="Party popper emojis">
