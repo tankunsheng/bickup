@@ -1,0 +1,11 @@
+service: static-bickup
+provider: aws
+
+plugins:
+  - serverless-finch
+
+custom:
+  client:
+    bucketName: ${env:ENVIRONMENT}-static-bickup-bucket # (see Configuration Parameters below)
+    distributionFolder: public
+    # [other configuration parameters] (see Configuration Parameters below)

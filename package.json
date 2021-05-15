@@ -1,0 +1,25 @@
+{
+  "name": "bickup",
+  "version": "1.0.0",
+  "private": true,
+  "description": "bickup",
+  "author": "KunSheng",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "//npm run sls:local -- deploy or npm run sls:local -- remove": "to deploy or remove",
+    "sls:local" : "ENVIRONMENT=dev serverless client --no-confirm" 
+  },
+  "dependencies": {
+    "gatsby": "^3.4.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "serverless-finch": "^2.6.0"
+  }
+}
