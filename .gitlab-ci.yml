@@ -19,9 +19,4 @@ deploy:
     - npm ci
     - npm run build
   script:
-    - ls -alth
-    - echo "$AWS_ACCESS_KEY_ID"
-    - echo "$TEST"
-    - echo "$ENVIRONMENT"
-    - echo "$CI_COMMIT_BRANCH"
     - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy
