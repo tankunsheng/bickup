@@ -1,5 +1,9 @@
 image: node:lts-alpine
 
+stages:
+  - build
+  -  deploy
+
 variables:
   ENVIRONMENT: $CI_COMMIT_BRANCH
 
