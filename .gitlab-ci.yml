@@ -22,4 +22,5 @@ deploy:
     - npm run build
   script:
     - ls -alth
+    - echo "$AWS_ACCESS_KEY_ID"
     - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy
