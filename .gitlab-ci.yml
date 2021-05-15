@@ -3,10 +3,13 @@ image: node:lts-alpine
 variables:
   ENVIRONMENT: $CI_COMMIT_BRANCH
 
+default:
+  before_script:
+    - npm ci
+
 build-job:
   stage: build
   script:
-    - npm ci
     - npm run build
 
 # test-job:
@@ -21,4 +24,5 @@ deploy:
   #     - dev
   stage: deploy
   script:
+    - ls -alth
     - ENVIRONMENT="$ENVIRONMENT" npm run sls -- deploy
