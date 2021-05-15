@@ -11,6 +11,10 @@ This project is deployed using **Serverless Finch Plugin**. Refer to references 
 
 ---
 ## References
-https://github.com/fernando-mc/serverless-finch
 
-https://www.serverless.com/blog/deploy-serverless-frontend-with-serverless-finch-plugin
+### Serverless
+* https://github.com/fernando-mc/serverless-finch
+* https://www.serverless.com/blog/deploy-serverless-frontend-with-serverless-finch-plugin
+
+### Gitlab CICD
+https://about.gitlab.com/blog/2021/02/05/ci-deployment-and-environments/

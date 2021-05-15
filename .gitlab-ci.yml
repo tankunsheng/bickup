@@ -1,0 +1,21 @@
+variables:
+  ENVIRONMENT: $CI_COMMIT_BRANCH
+
+build-job:
+  stage: build
+  script:
+    - npm run build
+
+# test-job:
+#   stage: test
+#   script:
+#     - echo "This job tests something"
+
+
+deploy:
+  # only:
+  #   refs:
+  #     - dev
+  stage: deploy
+  script:
+    - ENVIRONMENT="$ENVIRONMENT" npm run sls -- deploy

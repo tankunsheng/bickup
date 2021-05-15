@@ -13,8 +13,9 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "//npm run sls:local -- deploy or npm run sls:local -- remove": "to deploy or remove",
-    "sls:local" : "ENVIRONMENT=dev serverless client --no-confirm" 
+    "//npm run sls:dev -- deploy or npm run sls:dev -- remove": "to deploy or remove",
+    "sls" : "serverless client --no-confirm",
+    "sls:local" : "ENVIRONMENT=dev serverless client --no-confirm"
   },
   "dependencies": {
     "gatsby": "^3.4.1",
