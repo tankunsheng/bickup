@@ -10,13 +10,12 @@ variables:
 #     - echo "This job tests something"
 
 
-deploy:
-  # only:
-  #   refs:
-  #     - dev
+deploy-static-site:
   stage: deploy
   before_script:
     - npm ci
     - npm run build
   script:
+    - cd serverless/s3
+    - npm ci
     - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy

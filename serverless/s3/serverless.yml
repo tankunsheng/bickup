@@ -9,5 +9,5 @@ custom:
   client:
     region: ap-southeast-1
     bucketName: ${env:ENVIRONMENT}-static-bickup # (see Configuration Parameters below)
-    distributionFolder: public
+    distributionFolder: ../../public
     # [other configuration parameters] (see Configuration Parameters below)
