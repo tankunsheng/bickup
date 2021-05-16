@@ -1,12 +1,10 @@
 import React from "react";
 
-import Header from "../components/Header";
+import PageLayout from "../components/PageLayout";
 
-// markup
 const IndexPage = () => {
-  return (
-    <main className="dark:bg-gray-800 bg-white relative overflow-hidden h-screen">
-      <Header />
+  const Index = () => {
+    return (
       <div className="bg-white dark:bg-gray-800 flex relative z-20 items-center">
         <div className="container mx-auto px-6 flex flex-col justify-between items-center relative py-8">
           <div className="flex flex-col">
@@ -26,12 +24,6 @@ const IndexPage = () => {
               >
                 Get started
               </a>
-              {/* <a
-              href="#"
-              className="uppercase py-2 px-4 bg-transparent border-2 border-gray-800 text-gray-800 dark:text-white hover:bg-gray-800 hover:text-white text-md"
-            >
-              Documentation
-            </a> */}
             </div>
           </div>
           <div className="block w-full mx-auto mt-6 md:mt-0 relative">
@@ -42,8 +34,9 @@ const IndexPage = () => {
           </div>
         </div>
       </div>
-    </main>
-  );
+    );
+  };
+  return ( <PageLayout content={<Index />} />);
 };
 
 export default IndexPage;

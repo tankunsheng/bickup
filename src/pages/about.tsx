@@ -1,16 +1,11 @@
 import React from "react";
-import Header from "../components/Header";
+import PageLayout from "../components/PageLayout";
 
-// markup
 const IndexPage = () => {
-  return (
-    <main className="dark:bg-gray-800 bg-white relative overflow-hidden h-screen">
-      <Header />
-      <div className="bg-white dark:bg-gray-800 flex relative z-20 items-center">
-        about
-      </div>
-    </main>
-  );
+  const About = () => {
+    return <div>ABOUT PAGE</div>;
+  };
+  return <PageLayout content={<About />} />;
 };
 
 export default IndexPage;
