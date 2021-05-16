@@ -13,10 +13,10 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
+    "buildserve": "npm run build && npm run serve",
     "sls:deploy": "serverless client deploy --no-confirm"
   },
   "dependencies": {
-    "@reach/router": "^1.3.4",
     "gatsby": "^3.4.1",
     "gatsby-plugin-sass": "^4.5.0",
     "react": "^17.0.1",

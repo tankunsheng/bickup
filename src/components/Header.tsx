@@ -1,5 +1,5 @@
 import React from "react";
-import {  Link } from "@reach/router";
+import {  Link } from "gatsby";
 export default () => {
   return (
     <div>
@@ -22,7 +22,7 @@ export default () => {
           <div className="flex items-center">
             <nav className="font-sen text-gray-800 dark:text-white uppercase text-lg lg:flex items-center hidden">
               <Link className="py-2 px-6 flex text-indigo-500 border-b-2 border-indigo-500" to="/">Home</Link>
-              <Link className="py-2 px-6 flex hover:text-indigo-500" to="/about">Dashboard</Link>
+              <Link className="py-2 px-6 flex hover:text-indigo-500" to="/about">About</Link>
             </nav>
             <button className="lg:hidden flex flex-col ml-4">
               <span className="w-6 h-1 bg-gray-800 dark:bg-white mb-1"></span>
