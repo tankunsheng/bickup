@@ -1,8 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import axios from "axios";
 import { StaticImage } from "gatsby-plugin-image";
 import PageLayout from "../components/PageLayout";
 
 const IndexPage = () => {
+  // https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job
+  useEffect(() => {
+    axios(
+      "https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job",
+      {
+        method: "POST",
+      }
+    ).then((response) => {
+      console.log(response);
+    });
+  });
   const Index = () => {
     return (
       <div className="bg-white dark:bg-gray-800 flex relative z-20 items-center">

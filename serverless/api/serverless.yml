@@ -15,5 +15,6 @@ functions:
     description: Submit job information
     events:
       - http: 
+          cors: true
           path: job
           method: post
