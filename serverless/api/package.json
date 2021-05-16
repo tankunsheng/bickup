@@ -1,0 +1,16 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Serverless lambda apis fronted by api gateway",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sls:deploy": "serverless deploy"
+    
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serverless": "^2.41.2"
+  }
+}

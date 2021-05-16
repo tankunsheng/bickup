@@ -3,12 +3,10 @@ image: node:lts-alpine
 variables:
   ENVIRONMENT: $CI_COMMIT_BRANCH
 
-
 # test-job:
 #   stage: test
 #   script:
 #     - echo "This job tests something"
-
 
 deploy-static-site:
   stage: deploy
@@ -21,4 +19,12 @@ deploy-static-site:
   script:
     - cd serverless/s3
     - npm ci
+    - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy
+
+deploy-api:
+  stage: deploy
+  before_script:
+    - cd serverless/api
+    - npm ci
+  script:
     - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy

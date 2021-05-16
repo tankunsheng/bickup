@@ -1,0 +1,19 @@
+# https://www.serverless.com/blog/node-rest-api-with-serverless-lambda-and-dynamodb
+
+service: bickup-apis
+
+provider:
+  name: aws
+  runtime: nodejs12
+  stage: ${env:ENVIRONMENT}
+  region: ap-southeast-1
+
+functions:
+  jobSubmission:
+    handler: job.submit
+    memorySize: 128
+    description: Submit job information
+    events:
+      - http: 
+          path: job
+          method: post
