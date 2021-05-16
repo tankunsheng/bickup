@@ -12,7 +12,7 @@ const IndexPage = () => {
               Bick-up
             </h1>
             <h2 className="font-light max-w-2xl mx-auto w-full text-xl dark:text-white text-gray-500 text-center py-8">
-             Bicycle Pick up
+              Bicycle Pick up
             </h2>
             <div className="flex items-center justify-center mt-4">
               <a
@@ -25,20 +25,6 @@ const IndexPage = () => {
           </div>
           <div className="flex justify-center mt-12">
             <StaticImage src="../images/icon.png" alt="A dinosaur" />
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-48 w-48"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-              />
-            </svg>
           </div>
         </div>
       </div>
