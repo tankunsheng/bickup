@@ -3,6 +3,8 @@ const submit = (event, context, callback) => {
     "http://localhost:8000",
     "http://dev-static-bickup.s3-website-ap-southeast-1.amazonaws.com",
   ].find((whitelistOrigin) => whitelistOrigin === event.headers.origin);
+  console.log(whitelistedOrigin ?? "nothing")
+  console.log(whitelistedOrigin)
   const response = {
     statusCode: 200,
     headers: {
