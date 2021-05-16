@@ -13,15 +13,12 @@ variables:
 deploy-static-site:
   stage: deploy
   before_script:
+    # required to install these dependencies not included in node:lts-alpine image after introducing 1909033e
+    # which included the following js deps "gatsby-plugin-image", "gatsby-plugin-sharp", "gatsby-source-filesystem", "gatsby-transformer-sharp"
     - apk add --no-cache autoconf automake libtool build-base nasm pkgconf
-    - echo here
-    - pwd
-    - ls -alth
     - npm ci
     - npm run build
   script:
     - cd serverless/s3
-    - echo later
-    - echo ls -alth
     - npm ci
     - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy
