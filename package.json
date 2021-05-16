@@ -13,8 +13,7 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "buildserve": "rm -rf public && npm run build && npm run serve",
-    "sls:deploy": "serverless client deploy --no-confirm"
+    "buildserve": "rm -rf public && npm run build && npm run serve"
   },
   "dependencies": {
     "gatsby": "^3.4.1",
