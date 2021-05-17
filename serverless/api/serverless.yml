@@ -5,7 +5,7 @@ service: bickup-apis
 provider:
   name: aws
   runtime: nodejs14.x
-  stage: ${env:ENVIRONMENT}
+  stage: ${env:ENVIRONMENT} # takes in an environment variable named 'ENVIRONMENT'
   region: ap-southeast-1
 
 functions:
