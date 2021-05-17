@@ -9,13 +9,21 @@ export default ({ location }: any) => {
   }
   const NavLinks: Array<INavLinks> = [
     {
-      label: "Home",
+      label: "What we do",
       toPath: "/",
       isRootPath: true
     },
     {
-      label: "About",
-      toPath: "/about",
+      label: "Pricing",
+      toPath: "/pricing",
+    },
+    {
+      label: "Book Now",
+      toPath: "/book",
+    },
+    {
+      label: "FAQ",
+      toPath: "/faq",
     },
   ];
 
