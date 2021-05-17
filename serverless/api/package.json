@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "sls:local:job": "ENVIRONMENT=dev serverless invoke local --function jobSubmission --path local/jobSubmission.json",
     "sls:deploy": "serverless deploy"
     
   },
