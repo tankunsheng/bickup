@@ -1,13 +1,17 @@
 import React from "react";
 import Header from "./Header";
+import { Space } from "antd";
 export default ({ content, location }: any) => {
-  console.log(location);
   return (
-    <>
-      <main className="dark:bg-gray-800 bg-white relative overflow-hidden h-screen container mx-auto px-6 ">
+    <div>
+      <Space
+        size="large"
+        direction="vertical"
+        style={{ width: "100%", textAlign: "center" }}
+      >
         <Header location={location} />
-        {content}
-      </main>
-    </>
+        <div style={{ padding: "0 2em 0 2em" }}>{content}</div>
+      </Space>
+    </div>
   );
 };
