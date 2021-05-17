@@ -1,7 +1,24 @@
 import React from "react";
 import { Link } from "gatsby";
 import { StaticImage } from "gatsby-plugin-image";
-export default () => {
+export default ({ location }: any) => {
+  interface INavLinks {
+    label: string;
+    toPath: string;
+    isRootPath?: boolean
+  }
+  const NavLinks: Array<INavLinks> = [
+    {
+      label: "Home",
+      toPath: "/",
+      isRootPath: true
+    },
+    {
+      label: "About",
+      toPath: "/about",
+    },
+  ];
+
   return (
     <div>
       <header className="h-24 sm:h-32 flex items-center z-30 w-full">
@@ -11,18 +28,22 @@ export default () => {
           </div>
           <div className="flex items-center">
             <nav className="font-sen text-gray-800 dark:text-white uppercase text-lg lg:flex items-center hidden">
-              <Link
-                className="py-2 px-6 flex text-indigo-500 border-b-2 border-indigo-500"
-                to="/"
-              >
-                Home
-              </Link>
-              <Link
-                className="py-2 px-6 flex hover:text-indigo-500"
-                to="/about"
-              >
-                About
-              </Link>
+              {NavLinks.map((eachLink) => {
+                return (
+                  <Link
+                    key={eachLink.label}
+                    className={`py-2 px-6 flex ${
+                      (location.pathname.substring(1) === eachLink.label.toLowerCase() 
+                      || location.pathname==="/" && eachLink.isRootPath)
+                        ? "text-indigo-500 border-b-2 border-indigo-500"
+                        : "flex hover:text-indigo-500"
+                    }`}
+                    to={eachLink.toPath}
+                  >
+                    {eachLink.label}
+                  </Link>
+                );
+              })}
             </nav>
             <button className="lg:hidden flex flex-col ml-4">
               <span className="w-6 h-1 bg-gray-800 dark:bg-white mb-1"></span>

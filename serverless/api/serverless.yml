@@ -18,3 +18,20 @@ functions:
           cors: true
           path: job
           method: post
+
+# https://www.serverless.com/framework/docs/providers/aws/guide/resources/
+# resources:
+#   Resources:
+#     jobsTable:
+#       Type: AWS::DynamoDB::Table
+#       Properties:
+#         TableName: jobsTable
+#         AttributeDefinitions:
+#           - AttributeName: xxx
+#             AttributeType: S
+#         KeySchema:
+#           - AttributeName: clientNumber # client hp number
+#             KeyType: HASH
+#           - AttributeName: timestamp # timestamp of job submission
+#             KeyType: RANGE
+        
