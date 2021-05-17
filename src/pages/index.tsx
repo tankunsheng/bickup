@@ -14,12 +14,6 @@ const IndexPage = ({ location }: any) => {
     }).then((response) => {
       console.log(response);
     });
-    // axios(
-    //   "https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job",
-    //   {
-    //     method: "POST",
-    //   }
-    // ).then((response) => {
 
   });
   const Index = () => {

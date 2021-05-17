@@ -5,9 +5,10 @@
       "name": "bickup-apis"
     },
     "provider": {
+      "stage": "dev",
+      "variableSyntax": "\\${([^{}]+?)}",
       "name": "aws",
       "runtime": "nodejs14.x",
-      "stage": "dev",
       "region": "ap-southeast-1",
       "environment": {
         "TableName": "dev-jobsTable"
@@ -24,8 +25,8 @@
           "Resource": "*"
         }
       ],
-      "variableSyntax": "\\${([^{}:]+?(?:\\(|:)(?:[^:{}][^{}]*?)?)}",
       "versionFunctions": true,
+      "remoteFunctionData": null,
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
         "Description": "The AWS CloudFormation template for this Serverless application",
@@ -70,21 +71,6 @@
                               "Ref": "ServerlessDeploymentBucket"
                             },
                             "/*"
-                          ]
-                        ]
-                      },
-                      {
-                        "Fn::Join": [
-                          "",
-                          [
-                            "arn:",
-                            {
-                              "Ref": "AWS::Partition"
-                            },
-                            ":s3:::",
-                            {
-                              "Ref": "ServerlessDeploymentBucket"
-                            }
                           ]
                         ]
                       }
@@ -192,38 +178,38 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/bickup-apis/dev/1621274948319-2021-05-17T18:09:08.319Z/bickup-apis.zip"
+                "S3Key": "serverless/bickup-apis/dev/1621276500165-2021-05-17T18:35:00.165Z/bickup-apis.zip"
               },
-              "Handler": "job.submit",
-              "Runtime": "nodejs14.x",
               "FunctionName": "bickup-apis-dev-jobSubmission",
+              "Handler": "job.submit",
               "MemorySize": 128,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs14.x",
               "Timeout": 6,
               "Description": "Submit job information",
               "Environment": {
                 "Variables": {
                   "TableName": "dev-jobsTable"
                 }
-              },
-              "Role": {
-                "Fn::GetAtt": [
-                  "IamRoleLambdaExecution",
-                  "Arn"
-                ]
               }
             },
             "DependsOn": [
               "JobSubmissionLogGroup"
             ]
           },
-          "JobSubmissionLambdaVersionSfu1HbTpzTfn6hdnukRfV1JSSO8GFPy5ZMZ8q6SU": {
+          "JobSubmissionLambdaVersion33vFI4gSETNmtfdOYl6MjnQZ9ji4ElTdi6jrcD3L4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "JobSubmissionLambdaFunction"
               },
-              "CodeSha256": "1SUIpH6YIE2NWMFO8ZE2WY7cHUi6by2NOxpFNuXpD60=",
+              "CodeSha256": "cLdWJtFv4FMykz6i0CxzFHtZLIVrJUfO7zZntebjBdQ=",
               "Description": "Submit job information"
             }
           },
@@ -342,7 +328,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1621274938112": {
+          "ApiGatewayDeployment1621276482817": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -419,18 +405,12 @@
           "ServerlessDeploymentBucketName": {
             "Value": {
               "Ref": "ServerlessDeploymentBucket"
-            },
-            "Export": {
-              "Name": "sls-bickup-apis-dev-ServerlessDeploymentBucketName"
             }
           },
           "JobSubmissionLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "JobSubmissionLambdaVersionSfu1HbTpzTfn6hdnukRfV1JSSO8GFPy5ZMZ8q6SU"
-            },
-            "Export": {
-              "Name": "sls-bickup-apis-dev-JobSubmissionLambdaFunctionQualifiedArn"
+              "Ref": "JobSubmissionLambdaVersion33vFI4gSETNmtfdOYl6MjnQZ9ji4ElTdi6jrcD3L4"
             }
           },
           "ServiceEndpoint": {
@@ -454,9 +434,6 @@
                   "/dev"
                 ]
               ]
-            },
-            "Export": {
-              "Name": "sls-bickup-apis-dev-ServiceEndpoint"
             }
           }
         }
@@ -505,21 +482,6 @@
                               "Ref": "ServerlessDeploymentBucket"
                             },
                             "/*"
-                          ]
-                        ]
-                      },
-                      {
-                        "Fn::Join": [
-                          "",
-                          [
-                            "arn:",
-                            {
-                              "Ref": "AWS::Partition"
-                            },
-                            ":s3:::",
-                            {
-                              "Ref": "ServerlessDeploymentBucket"
-                            }
                           ]
                         ]
                       }
@@ -585,7 +547,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "JobSubmissionLambdaVersionSfu1HbTpzTfn6hdnukRfV1JSSO8GFPy5ZMZ8q6SU"
+        "versionLogicalId": "JobSubmissionLambdaVersion33vFI4gSETNmtfdOYl6MjnQZ9ji4ElTdi6jrcD3L4"
       }
     },
     "resources": {
@@ -615,28 +577,13 @@
       },
       "Outputs": {}
     },
-    "configValidationMode": "warn",
     "serviceFilename": "serverless.yml",
     "layers": {},
-    "initialServerlessConfig": {
-      "service": {
-        "$ref": "$[\"service\"][\"serviceObject\"]"
-      },
-      "provider": {
-        "$ref": "$[\"service\"][\"provider\"]"
-      },
-      "functions": {
-        "$ref": "$[\"service\"][\"functions\"]"
-      },
-      "resources": {
-        "$ref": "$[\"service\"][\"resources\"]"
-      }
-    },
     "isDashboardMonitoringPreconfigured": false,
-    "artifact": "C:\\Users\\yingh\\Desktop\\codetest\\bickup\\bickup\\serverless\\api\\.serverless\\bickup-apis.zip"
+    "artifact": "/home/kunsheng/bickup/serverless/api/.serverless/bickup-apis.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/bickup-apis/dev/1621274948319-2021-05-17T18:09:08.319Z",
+    "artifactDirectoryName": "serverless/bickup-apis/dev/1621276500165-2021-05-17T18:35:00.165Z",
     "artifact": "bickup-apis.zip"
   }
 }
