@@ -6,14 +6,21 @@ import PageLayout from "../components/PageLayout";
 const IndexPage = ({ location }: any) => {
   // https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job
   useEffect(() => {
-    axios(
-      "https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job",
-      {
-        method: "POST",
-      }
-    ).then((response) => {
+    axios.post('https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job', {
+      "clientNumber": "clientNumber10",
+      "bicycleModel": "bicycleModel",
+      "srcLocation": "srcLocation",
+      "destLocation": "destLocation"
+    }).then((response) => {
       console.log(response);
     });
+    // axios(
+    //   "https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job",
+    //   {
+    //     method: "POST",
+    //   }
+    // ).then((response) => {
+
   });
   const Index = () => {
     return (
