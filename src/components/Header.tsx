@@ -20,7 +20,7 @@ export default ({ location }: any) => {
     },
     {
       label: "Book Now",
-      toPath: "/book",
+      toPath: "/booking",
     },
     {
       label: "FAQ",
