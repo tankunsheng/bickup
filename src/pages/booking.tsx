@@ -20,9 +20,6 @@ const IndexPage = ({ location }: any) => {
         "https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job",
         {
           clientNumber: "clientNumber10",
-          bicycleModel: "bicycleModel",
-          srcLocation: "srcLocation",
-          destLocation: "destLocation",
         }
       )
       .then((response) => {
@@ -103,16 +100,16 @@ const IndexPage = ({ location }: any) => {
           {(fields, { add, remove }, { errors }) => (
             <>
               {fields.map((field, index) => (
-                <Form.Item
-                  {...(index === 0
-                    ? formItemLayout
-                    : formItemLayoutWithOutLabel)}
-                  label={index === 0 ? "Drop-off point(s)" : ""}
-                  required={false}
-                  key={field.key}
-                >
+                // <Form.Item
+                //   {...(index === 0
+                //     ? formItemLayout
+                //     : formItemLayoutWithOutLabel)}
+                //   label={index === 0 ? "Drop-off point(s)" : ""}
+                //   required={false}
+                //   key={field.key}
+                // >
                   <Form.Item
-                   style={{ float: "left" }}
+                   label="Drop-off point(s)"
                     {...field}
                     validateTrigger={["onChange", "onBlur"]}
                     rules={[
@@ -125,11 +122,11 @@ const IndexPage = ({ location }: any) => {
                     ]}
                     // noStyle
                   >
-                    <Input className="ant-col ant-col-22"
+                    <Input className="ant-col ant-col-14"
                       placeholder="Drop-off point"
                      
                     />
-                  </Form.Item>
+                  {/* </Form.Item> */}
                   {fields.length > 0 ? (
                     <MinusCircleOutlined
                       className="dynamic-delete-button"

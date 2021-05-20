@@ -6,15 +6,11 @@ const { handleResponse } = require("./lib/helper");
 const submit = async (event, context) => {
   const requestBody = JSON.parse(event.body);
   const clientNumber = requestBody.clientNumber;
-  const bicycleModel = requestBody.bicycleModel;
   const srcLocation = requestBody.srcLocation;
   const destLocation = requestBody.destLocation;
 
   if (
-    typeof clientNumber !== "string" ||
-    typeof bicycleModel !== "string" ||
-    typeof srcLocation !== "string" ||
-    typeof destLocation !== "string"
+    typeof clientNumber !== "string" 
   ) {
     console.error("Validation Failed");
     callback(
@@ -22,20 +18,19 @@ const submit = async (event, context) => {
     );
     return;
   }
-  const submitCandidateP = (candidate) => {
-    console.log("Submitting candidate");
-    const candidateInfo = {
+  const createJob = (job) => {
+    console.log("Submitting job");
+    const jobInfo = {
       TableName: process.env.TableName,
-      Item: candidate,
+      Item: job,
     };
-    return dynamoDb.put(candidateInfo).promise();
+    return dynamoDb.put(jobInfo).promise();
   };
   const timestamp = new Date().getTime();
 
-  return submitCandidateP({
+  return createJob({
     clientNumber: clientNumber,
     timestamp: timestamp,
-    bicycleModel: bicycleModel,
     srcLocation: srcLocation,
     destLocation: destLocation,
   }).then((response) => {
