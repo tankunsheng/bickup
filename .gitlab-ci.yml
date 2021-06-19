@@ -17,14 +17,14 @@ deploy-static-site:
     - npm ci
     - npm run build
   script:
-    - cd serverless/s3
+    - cd serverless/cdk
     - npm ci
-    - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy
+    - env="$ENVIRONMENT" npm run cdk deploy --require-approval never
 
-deploy-api:
-  stage: deploy
-  before_script:
-    - cd serverless/api
-    - npm ci
-  script:
-    - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy
+# deploy-api:
+#   stage: deploy
+#   before_script:
+#     - cd serverless/api
+#     - npm ci
+#   script:
+#     - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy
