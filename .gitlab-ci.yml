@@ -19,7 +19,7 @@ deploy-static-site:
   script:
     - cd serverless/cdk
     - npm ci
-    - env="$ENVIRONMENT" npm run cdk deploy --require-approval never
+    - "npm run build && env="$ENVIRONMENT" npm run cdk deploy -- --all --require-approval never
 
 # deploy-api:
 #   stage: deploy
