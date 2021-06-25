@@ -151,7 +151,7 @@ export class BackendStack extends cdk.Stack {
     //   environment: {},
     //   role: rwJobsTableLambdaRole
     // });
-    const postJobFn = new NodejsFunction(this, "bickup-jobs-stream-fn", {
+    const postJobFn = new NodejsFunction(this, "bikcup-postjob-fn", {
       functionName: `${config.deploymentEnv}-bickup-postjob-fn`,
       runtime: Runtime.NODEJS_14_X,
       entry: "./src/jobs.ts",
