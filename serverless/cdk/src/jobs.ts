@@ -1,14 +1,16 @@
 import axios from "axios";
-import * as AWS from "aws-sdk"
+import * as AWS from "aws-sdk";
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
 });
 const createJob = async function (event: any, context: any) {
-  console.log("create job");
-  var params = {
+  const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+  const localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+  const contact_no = "12345678";
+  const params = {
     Item: {
-      contact_no: "123456",
-      created_at: "123456"
+      contact_no: contact_no,
+      created_at: localISOTime,
     },
     TableName: "dev-bickup-jobs-table",
   };
@@ -18,12 +20,19 @@ const createJob = async function (event: any, context: any) {
         if (err) {
           reject(err);
         } else {
+          console.log(`resolved data is ${data}`);
           resolve(data);
         }
       });
     });
     console.log("Success - put");
     console.log(res);
+    return {
+      body: JSON.stringify({
+        statusCode: 200,
+        message: `Created Job for contact_no ${contact_no} at ${localISOTime}`,
+      }),
+    };
   } catch (err) {
     console.log("Error", err);
   }
