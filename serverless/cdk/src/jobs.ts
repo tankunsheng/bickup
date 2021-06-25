@@ -35,8 +35,13 @@ const createJob = async function (event: any, context: any) {
     };
   } catch (err) {
     console.log("Error", err);
+    return {
+      body: JSON.stringify({
+        statusCode: 500,
+        message: err,
+      }),
+    };
   }
-  console.log;
 };
 
 // telegram restapis reference: https://core.telegram.org/bots/api#making-requests
