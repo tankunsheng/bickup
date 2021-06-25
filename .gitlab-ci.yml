@@ -16,7 +16,11 @@ deploy-static-site:
     - apk add --no-cache autoconf automake libtool build-base nasm pkgconf
     - npm ci
     - npm run build
+    - echo "$AWS_ACCESS_KEY_ID"
+    - export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
+    - export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
   script:
+    - cat $AWS_ACCESS_KEY_ID
     - cd serverless/cdk
     - npm ci
     - npm run deploy:dev
