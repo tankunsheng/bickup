@@ -7,12 +7,8 @@ const createJob = async function (event: any, context: any) {
   console.log("create job");
   var params = {
     Item: {
-      contact_no: {
-        S: "123456",
-      },
-      created_at: {
-        S: "123456",
-      },
+      contact_no: "123456",
+      created_at: "123456"
     },
     TableName: "dev-bickup-jobs-table",
   };
