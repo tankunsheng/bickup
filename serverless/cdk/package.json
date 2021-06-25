@@ -9,25 +9,33 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
+    "// npm run esbuild ./src/jobs.ts -- --bundle --outfile=out.js" : "manual bundle",
+    "esbuild": "esbuild",
+    "diff:dev": "npm run build && env=dev npm run cdk diff",
     "deploy:dev": "npm run build && env=dev npm run cdk deploy -- --all --require-approval never"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.109.0",
     "@types/jest": "^26.0.10",
     "@types/node": "10.17.27",
+    "aws-cdk": "1.109.0",
+    "esbuild": "^0.12.9",
     "jest": "^26.4.2",
     "ts-jest": "^26.2.0",
-    "aws-cdk": "1.109.0",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7"
   },
   "dependencies": {
     "@aws-cdk/aws-apigateway": "^1.109.0",
     "@aws-cdk/aws-cognito": "^1.109.0",
+    "@aws-cdk/aws-dynamodb": "^1.109.0",
+    "@aws-cdk/aws-lambda-event-sources": "^1.109.0",
+    "@aws-cdk/aws-lambda-nodejs": "^1.109.0",
     "@aws-cdk/aws-s3": "^1.109.0",
     "@aws-cdk/aws-s3-deployment": "^1.109.0",
     "@aws-cdk/core": "1.109.0",
     "aws-sdk": "^2.931.0",
+    "axios": "^0.21.1",
     "source-map-support": "^0.5.16"
   }
 }
