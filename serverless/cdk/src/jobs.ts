@@ -1,6 +1,6 @@
 import axios from "axios";
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
-const client = new DynamoDB({
+import * as AWS from "aws-sdk"
+const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
 });
 const createJob = async function (event: any, context: any) {
@@ -18,7 +18,7 @@ const createJob = async function (event: any, context: any) {
   };
   try {
     let res = await new Promise((resolve, reject) => {
-      client.putItem(params, function (err: any, data: any) {
+      client.put(params, function (err: any, data: any) {
         if (err) {
           reject(err);
         } else {
