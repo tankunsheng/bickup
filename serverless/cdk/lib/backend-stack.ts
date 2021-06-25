@@ -143,12 +143,19 @@ export class BackendStack extends cdk.Stack {
         ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole")
       ],
     });
-    const postJobFn = new Function(this, "bikcup-postjob-fn", {
+    // const postJobFn = new Function(this, "bikcup-postjob-fn", {
+    //   functionName: `${config.deploymentEnv}-bickup-postjob-fn`,
+    //   runtime: Runtime.NODEJS_14_X,
+    //   code: new AssetCode("./src"),
+    //   handler: "jobs.createJob",
+    //   environment: {},
+    //   role: rwJobsTableLambdaRole
+    // });
+    const postJobFn = new NodejsFunction(this, "bickup-jobs-stream-fn", {
       functionName: `${config.deploymentEnv}-bickup-postjob-fn`,
       runtime: Runtime.NODEJS_14_X,
-      code: new AssetCode("./src"),
-      handler: "jobs.createJob",
-      environment: {},
+      entry: "./src/jobs.ts",
+      handler: "createJob",
       role: rwJobsTableLambdaRole
     });
 

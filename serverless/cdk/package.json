@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "// npm run esbuild ./src/jobs.ts -- --bundle --outfile=out.js" : "manual bundle",
+    "// npm run esbuild ./src/jobs.ts -- --bundle --outfile=out.js": "manual bundle",
     "esbuild": "esbuild",
     "diff:dev": "npm run build && env=dev npm run cdk diff",
     "deploy:dev": "npm run build && env=dev npm run cdk deploy -- --all --require-approval never"
@@ -34,6 +34,7 @@
     "@aws-cdk/aws-s3": "^1.109.0",
     "@aws-cdk/aws-s3-deployment": "^1.109.0",
     "@aws-cdk/core": "1.109.0",
+    "@aws-sdk/client-dynamodb": "^3.19.0",
     "aws-sdk": "^2.931.0",
     "axios": "^0.21.1",
     "source-map-support": "^0.5.16"
