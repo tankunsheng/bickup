@@ -17,14 +17,15 @@ const handleJobStream = async function (event: any, context: any) {
   console.log("db stream job");
  
   const testToken = "1891683701:AAFRELCirvrwZldZ0E-NaWo-4hHx-IS9OJ4";
-  const testChat = "-334215881";
+  const testChatId = "-334215881";
   const response = await axios.post(
     `https://api.telegram.org/bot${testToken}/sendMessage`, 
     {
-      chat_id: testChat+"",
-      text: "dynamodb stream event",
+      chat_id: testChatId,
+      text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(event.Records[0].dynamodb.NewImage)}`,
     }
   );
+  console.log(response)
 };
 export { createJob, handleJobStream };
 
