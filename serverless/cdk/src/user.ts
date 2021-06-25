@@ -1,5 +1,5 @@
 import * as CognitoIdentityServiceProvider from "aws-sdk/clients/cognitoidentityserviceprovider";
-import { resolve } from "dns";
+
 //https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#adminAddUserToGroup-property
 const register = async function (event: any, context: any) {
   const method = event.httpMethod;

@@ -1,36 +1,36 @@
 import axios from "axios";
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
-const client = new DynamoDB({
-  region: "ap-southeast-1",
-});
+// import { DynamoDB } from "@aws-sdk/client-dynamodb";
+// const client = new DynamoDB({
+//   region: "ap-southeast-1",
+// });
 const createJob = async function (event: any, context: any) {
   console.log("create job");
-  var params = {
-    Item: {
-      contact_no: {
-        S: "123456",
-      },
-      created_at: {
-        S: "123456",
-      },
-    },
-    TableName: "dev-bickup-jobs-table",
-  };
-  try {
-    let res = await new Promise((resolve, reject) => {
-      client.putItem(params, function (err: any, data: any) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
-    console.log("Success - put");
-    console.log(res);
-  } catch (err) {
-    console.log("Error", err);
-  }
+  // var params = {
+  //   Item: {
+  //     contact_no: {
+  //       S: "123456",
+  //     },
+  //     created_at: {
+  //       S: "123456",
+  //     },
+  //   },
+  //   TableName: "dev-bickup-jobs-table",
+  // };
+  // try {
+  //   let res = await new Promise((resolve, reject) => {
+  //     client.putItem(params, function (err: any, data: any) {
+  //       if (err) {
+  //         reject(err);
+  //       } else {
+  //         resolve(data);
+  //       }
+  //     });
+  //   });
+  //   console.log("Success - put");
+  //   console.log(res);
+  // } catch (err) {
+  //   console.log("Error", err);
+  // }
   console.log;
 };
 
