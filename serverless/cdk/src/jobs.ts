@@ -86,5 +86,4 @@ const handleJobStream = async function (event: any, context: any) {
   );
   console.log(response);
 };
-handleJobStream(undefined, undefined)
 export { createJob, handleJobStream };
