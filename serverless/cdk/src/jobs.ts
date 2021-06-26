@@ -3,17 +3,25 @@ import * as AWS from "aws-sdk";
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
 });
+class BetterDate extends Date{
+  constructor(){
+    super()
+  }
+  addHours(h:number){
+    this.setTime(this.getTime() + (h*60*60*1000))
+  }
+}
 const createJob = async function (event: any, context: any) {
-  const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-  console.log(`tzoffset is ${tzoffset}`)
-  const localISOTime = new Date(Date.now() - tzoffset)
-    .toISOString()
-    .slice(0, -1);
+  const now = new BetterDate()
+  now.addHours(8)
+  console.log(`after adding 8 hours ${now}`)
+  console.log(`now iso string = ${now.toISOString()}`)
+
   const contact_no = "12345678";
   const params = {
     Item: {
       contact_no: contact_no,
-      created_at: localISOTime,
+      created_at: now.toISOString(),
     },
     TableName: "dev-bickup-jobs-table",
   };
@@ -33,9 +41,7 @@ const createJob = async function (event: any, context: any) {
     return {
       body: JSON.stringify({
         statusCode: 200,
-        message: `Created Job for contact_no ${contact_no} at ${localISOTime} and ${new Date(
-          Date.now()
-        ).toISOString()}`,
+        message: `Created Job for contact_no ${contact_no} at ${now.toISOString()}`,
       }),
     };
   } catch (err) {
