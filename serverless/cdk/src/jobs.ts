@@ -5,6 +5,7 @@ const client = new AWS.DynamoDB.DocumentClient({
 });
 const createJob = async function (event: any, context: any) {
   const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+  console.log(`tzoffset is ${tzoffset}`)
   const localISOTime = new Date(Date.now() - tzoffset)
     .toISOString()
     .slice(0, -1);
@@ -32,7 +33,9 @@ const createJob = async function (event: any, context: any) {
     return {
       body: JSON.stringify({
         statusCode: 200,
-        message: `Created Job for contact_no ${contact_no} at ${localISOTime} and ${new Date(Date.now()).toISOString()}`,
+        message: `Created Job for contact_no ${contact_no} at ${localISOTime} and ${new Date(
+          Date.now()
+        ).toISOString()}`,
       }),
     };
   } catch (err) {
@@ -60,30 +63,48 @@ const handleJobStream = async function (event: any, context: any) {
   console.log(event.Records[0].dynamodb);
   console.log(context);
   console.log("db stream job");
-  const decryptedSecret :any = await new Promise((resolve, reject) => {
+  const decryptedSecret: any = await new Promise((resolve, reject) => {
     secretsmanager.getSecretValue(
       {
         SecretId: "dev/bickup/bot/token",
       },
       function (err, data) {
-        if(err){
-          reject(err)
-        }else{
-          resolve(data)
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
         }
       }
     );
   });
-  console.log(`decrypted secret is ${JSON.stringify(decryptedSecret)}`)
-  const response = await axios.post(
-    `https://api.telegram.org/bot${decryptedSecret["dev-bickup-bot-token"]}/sendMessage`,
-    {
-      chat_id: process.env.CHAT_ID,
-      text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
-        event.Records[0].dynamodb.NewImage
-      )}`,
-    }
-  );
-  console.log(response);
+  console.log(`decrypted secret is ${JSON.stringify(decryptedSecret)}`);
+  if (decryptedSecret) {
+    const botToken = JSON.parse(decryptedSecret.SecretString)[
+      "dev-bickup-bot-token"
+    ];
+    console.log(`bot token is ${botToken}`)
+    const response = await axios.post(
+      `https://api.telegram.org/bot${botToken}/sendMessage`,
+      {
+        chat_id: process.env.CHAT_ID,
+        text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
+          event.Records[0].dynamodb.NewImage
+        )}`,
+      }
+    );
+    console.log(response);
+    return {
+      body: JSON.stringify({
+        statusCode: 200,
+      }),
+    };
+  } else {
+    console.log("decryptedSecret is invalid")
+    return {
+      body: JSON.stringify({
+        statusCode: 500,
+      }),
+    };
+  }
 };
 export { createJob, handleJobStream };
