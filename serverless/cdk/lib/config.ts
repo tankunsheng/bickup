@@ -1,9 +1,11 @@
 const config = {
     dev: {
-        deploymentEnv: "dev"
+        deploymentEnv: "dev",
+        chatId: "-334215881"
     },
     prod: {
-        deploymentEnv: "prod"
+        deploymentEnv: "prod",
+        chatId: ""
     }
 }
 const env = process.env.env as keyof typeof config

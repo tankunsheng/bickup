@@ -2,16 +2,23 @@ import * as cdk from "@aws-cdk/core";
 import { UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
 import { LambdaRestApi } from "@aws-cdk/aws-apigateway";
 import { Table, AttributeType, StreamViewType } from "@aws-cdk/aws-dynamodb";
-import { Function, Runtime, AssetCode, Code, StartingPosition  } from "@aws-cdk/aws-lambda";
-import {  NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
+import {
+  Function,
+  Runtime,
+  AssetCode,
+  Code,
+  StartingPosition,
+} from "@aws-cdk/aws-lambda";
+import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
 import { DynamoEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import {
   ServicePrincipal,
   PolicyStatement,
   Role,
   ManagedPolicy,
-  
 } from "@aws-cdk/aws-iam";
+import * as kms from "@aws-cdk/aws-kms";
+
 import config from "./config";
 
 export class BackendStack extends cdk.Stack {
@@ -22,7 +29,7 @@ export class BackendStack extends cdk.Stack {
     super(scope, id, props);
     this.createUserPool();
     const table = this.createDynamoDb();
-    this.createDynamoDbStreams(table)
+    this.createDynamoDbStreams(table);
     this.createLambdaFunctions();
   }
   // https://www.youtube.com/watch?v=XvD2FrS5yYM dynamodb keys
@@ -63,7 +70,7 @@ export class BackendStack extends cdk.Stack {
         name: "contact_no",
         type: AttributeType.STRING,
       },
-      encryptionKey:undefined,
+      encryptionKey: undefined,
       //sort key supports datetime in string ISO https://stackoverflow.com/questions/40561484/what-data-type-should-be-use-for-timestamp-in-dynamodb
       sortKey: {
         name: "created_at",
@@ -71,33 +78,38 @@ export class BackendStack extends cdk.Stack {
       },
       readCapacity: 3,
       writeCapacity: 3,
-      stream: StreamViewType.NEW_AND_OLD_IMAGES
+      stream: StreamViewType.NEW_AND_OLD_IMAGES,
     });
-   
-    return this.dynamoDbJobsTable
+
+    return this.dynamoDbJobsTable;
   }
-  createDynamoDbStreams(table: Table){
-    const jobsTableStreamLambda = new NodejsFunction(this, "bickup-jobs-stream-fn", {
-      functionName: `${config.deploymentEnv}-bickup-jobs-stream-fn`,
-      runtime: Runtime.NODEJS_14_X,
-      entry: "./src/jobs.ts",
-      handler: "handleJobStream",
+  createDynamoDbStreams(table: Table) {
+    const jobsTableStreamLambda = new NodejsFunction(
+      this,
+      "bickup-jobs-stream-fn",
+      {
+        functionName: `${config.deploymentEnv}-bickup-jobs-stream-fn`,
+        runtime: Runtime.NODEJS_14_X,
+        entry: "./src/jobs.ts",
+        handler: "handleJobStream",
+        environment: {
+          CHAT_ID: config.chatId,
+        },
+      }
+    );
+    new kms.Key(this, "MyKey", {
+      enableKeyRotation: true,
     });
-    // const jobsTableStreamLambda = new Function(this, "bickup-jobs-stream-fn", {
-    //   functionName: `${config.deploymentEnv}-bickup-jobs-stream-fn`,
-    //   runtime: Runtime.NODEJS_14_X,
-    //   code: Code.fromAsset("./src", {
-    //     exclude: ['*.ts']
-    //   }),
-    //   handler: "jobs.handleJobStream",
-    // });
-    jobsTableStreamLambda.addEventSource(new DynamoEventSource(table, {
-      startingPosition: StartingPosition.TRIM_HORIZON,
-      batchSize: 5,
-      bisectBatchOnError: true,
-      // onFailure: new SqsDlq(deadLetterQueue), // configure deadletter queue for failures beyond number of retries
-      retryAttempts: 10
-    }));
+
+    jobsTableStreamLambda.addEventSource(
+      new DynamoEventSource(table, {
+        startingPosition: StartingPosition.TRIM_HORIZON,
+        batchSize: 5,
+        bisectBatchOnError: true,
+        // onFailure: new SqsDlq(deadLetterQueue), // configure deadletter queue for failures beyond number of retries
+        retryAttempts: 10,
+      })
+    );
   }
 
   createLambdaFunctions() {
@@ -122,27 +134,38 @@ export class BackendStack extends cdk.Stack {
       },
     });
     registerLambdaApi.root.addResource("users").addMethod("POST");
-    
 
     //Lambda for posting jobs
-    const rwJobsTablePolicy = new ManagedPolicy(this, "bickup-rw-jobs-table-policy", {
-      managedPolicyName: `${config.deploymentEnv}-rw-bickup-jobs-table`,
-      statements: [
-        new PolicyStatement({
-          //effect: Effect.Allow by default
-          actions: ["dynamodb:*"],
-          resources: [this.dynamoDbJobsTable.tableArn],
-        }),
-      ],
-    });
-    const rwJobsTableLambdaRole = new Role(this, "bickup-rw-jobs-table-lambda-role", {
-      assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
-      managedPolicies: [
-        rwJobsTablePolicy,
-        ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"),
-        ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole")
-      ],
-    });
+    const rwJobsTablePolicy = new ManagedPolicy(
+      this,
+      "bickup-rw-jobs-table-policy",
+      {
+        managedPolicyName: `${config.deploymentEnv}-rw-bickup-jobs-table`,
+        statements: [
+          new PolicyStatement({
+            //effect: Effect.Allow by default
+            actions: ["dynamodb:*"],
+            resources: [this.dynamoDbJobsTable.tableArn],
+          }),
+        ],
+      }
+    );
+    const rwJobsTableLambdaRole = new Role(
+      this,
+      "bickup-rw-jobs-table-lambda-role",
+      {
+        assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+        managedPolicies: [
+          rwJobsTablePolicy,
+          ManagedPolicy.fromAwsManagedPolicyName(
+            "service-role/AWSLambdaVPCAccessExecutionRole"
+          ),
+          ManagedPolicy.fromAwsManagedPolicyName(
+            "service-role/AWSLambdaBasicExecutionRole"
+          ),
+        ],
+      }
+    );
     // const postJobFn = new Function(this, "bikcup-postjob-fn", {
     //   functionName: `${config.deploymentEnv}-bickup-postjob-fn`,
     //   runtime: Runtime.NODEJS_14_X,
@@ -156,7 +179,7 @@ export class BackendStack extends cdk.Stack {
       runtime: Runtime.NODEJS_14_X,
       entry: "./src/jobs.ts",
       handler: "createJob",
-      role: rwJobsTableLambdaRole
+      role: rwJobsTableLambdaRole,
     });
 
     const postJobLambdaApi = new LambdaRestApi(this, "bickup-postjob-api", {
@@ -168,9 +191,8 @@ export class BackendStack extends cdk.Stack {
         allowOrigins: ["*"],
       },
     });
-    const job = postJobLambdaApi.root.addResource("jobs")
+    const job = postJobLambdaApi.root.addResource("jobs");
     job.addMethod("POST");
     job.addMethod("PUT");
-
   }
 }

@@ -5,7 +5,9 @@ const client = new AWS.DynamoDB.DocumentClient({
 });
 const createJob = async function (event: any, context: any) {
   const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-  const localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+  const localISOTime = new Date(Date.now() - tzoffset)
+    .toISOString()
+    .slice(0, -1);
   const contact_no = "12345678";
   const params = {
     Item: {
@@ -51,17 +53,32 @@ const createJob = async function (event: any, context: any) {
 //     "text": "test"
 //   }
 const handleJobStream = async function (event: any, context: any) {
+  var secretsmanager = new AWS.SecretsManager({
+    region: "ap-southeast-1",
+  });
   console.log(event);
   console.log(event.Records[0].dynamodb);
   console.log(context);
   console.log("db stream job");
-
-  const testToken = "1891683701:AAFRELCirvrwZldZ0E-NaWo-4hHx-IS9OJ4";
-  const testChatId = "-334215881";
+  const decryptedSecret :any = await new Promise((resolve, reject) => {
+    secretsmanager.getSecretValue(
+      {
+        SecretId: "dev/bickup/bot/token",
+      },
+      function (err, data) {
+        if(err){
+          reject(err)
+        }else{
+          resolve(data)
+        }
+      }
+    );
+  });
+  console.log(`decrypted secret is ${JSON.stringify(decryptedSecret)}`)
   const response = await axios.post(
-    `https://api.telegram.org/bot${testToken}/sendMessage`,
+    `https://api.telegram.org/bot${decryptedSecret["dev-bickup-bot-token"]}/sendMessage`,
     {
-      chat_id: testChatId,
+      chat_id: process.env.CHAT_ID,
       text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
         event.Records[0].dynamodb.NewImage
       )}`,
@@ -69,4 +86,5 @@ const handleJobStream = async function (event: any, context: any) {
   );
   console.log(response);
 };
+handleJobStream(undefined, undefined)
 export { createJob, handleJobStream };
