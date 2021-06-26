@@ -3,19 +3,21 @@ import * as AWS from "aws-sdk";
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
 });
-class BetterDate extends Date{
-  constructor(){
-    super()
+class BetterDate extends Date {
+  constructor() {
+    super();
   }
-  addHours(h:number){
-    this.setTime(this.getTime() + (h*60*60*1000))
+  addHours(hoursToAdd: number) {
+    this.setTime(this.getTime() + hoursToAdd * 60 * 60 * 1000);
   }
 }
 const createJob = async function (event: any, context: any) {
-  const now = new BetterDate()
-  now.addHours(8)
-  console.log(`after adding 8 hours ${now}`)
-  console.log(`now iso string = ${now.toISOString()}`)
+  if (!process.env.JOBS_TABLE) {
+    console.log("Jobs table name not specified");
+    return;
+  }
+  const now = new BetterDate();
+  now.addHours(8);
 
   const contact_no = "12345678";
   const params = {
@@ -23,10 +25,10 @@ const createJob = async function (event: any, context: any) {
       contact_no: contact_no,
       created_at: now.toISOString(),
     },
-    TableName: "dev-bickup-jobs-table",
+    TableName: process.env.JOBS_TABLE,
   };
   try {
-    let res = await new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       client.put(params, function (err: any, data: any) {
         if (err) {
           reject(err);
@@ -36,8 +38,6 @@ const createJob = async function (event: any, context: any) {
         }
       });
     });
-    console.log("Success - put");
-    console.log(res);
     return {
       body: JSON.stringify({
         statusCode: 200,
@@ -65,10 +65,10 @@ const handleJobStream = async function (event: any, context: any) {
   var secretsmanager = new AWS.SecretsManager({
     region: "ap-southeast-1",
   });
-  console.log(event);
-  console.log(event.Records[0].dynamodb);
-  console.log(context);
-  console.log("db stream job");
+  // console.log(event);
+  // console.log(event.Records[0].dynamodb);
+  // console.log(context);
+  // console.log("db stream job");
   const decryptedSecret: any = await new Promise((resolve, reject) => {
     secretsmanager.getSecretValue(
       {
@@ -83,12 +83,10 @@ const handleJobStream = async function (event: any, context: any) {
       }
     );
   });
-  console.log(`decrypted secret is ${JSON.stringify(decryptedSecret)}`);
   if (decryptedSecret) {
     const botToken = JSON.parse(decryptedSecret.SecretString)[
       "dev-bickup-bot-token"
     ];
-    console.log(`bot token is ${botToken}`)
     const response = await axios.post(
       `https://api.telegram.org/bot${botToken}/sendMessage`,
       {
@@ -105,7 +103,7 @@ const handleJobStream = async function (event: any, context: any) {
       }),
     };
   } else {
-    console.log("decryptedSecret is invalid")
+    console.log("decryptedSecret is invalid");
     return {
       body: JSON.stringify({
         statusCode: 500,

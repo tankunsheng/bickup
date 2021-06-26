@@ -182,6 +182,9 @@ export class BackendStack extends cdk.Stack {
       entry: "./src/jobs.ts",
       handler: "createJob",
       role: rwJobsTableLambdaRole,
+      environment:{
+        JOBS_TABLE: config.jobsTable
+      }
     });
 
     const postJobLambdaApi = new LambdaRestApi(this, "bickup-postjob-api", {
