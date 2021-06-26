@@ -55,11 +55,16 @@ export class BackendStack extends cdk.Stack {
       },
     });
     this.userPool.addDomain("bickup-user-pool-domain",{
+      
       cognitoDomain: {
-        domainPrefix: "dev-bickup"
+        domainPrefix: "dev-bickup",
+        
       }
     })
     this.userPoolClient = new UserPoolClient(this, "bickup-user-pool-client", {
+      oAuth: {
+        callbackUrls:["http://localhost:8000/login/callback"]
+      },
       userPool: this.userPool,
       userPoolClientName: `${config.deploymentEnv}-bickup-user-pool-client`,
     });
