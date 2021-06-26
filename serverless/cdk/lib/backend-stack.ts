@@ -97,9 +97,19 @@ export class BackendStack extends cdk.Stack {
         },
       }
     );
-    new kms.Key(this, "MyKey", {
-      enableKeyRotation: true,
-    });
+
+    jobsTableStreamLambda.addToRolePolicy(new PolicyStatement({
+      actions: [
+        "secretsmanager:GetResourcePolicy",
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:ListSecretVersionIds",
+        "secretsmanager:ListSecrets"
+      ],
+      resources: [
+        config.botTokenARN
+      ]
+    }));
 
     jobsTableStreamLambda.addEventSource(
       new DynamoEventSource(table, {
@@ -166,14 +176,6 @@ export class BackendStack extends cdk.Stack {
         ],
       }
     );
-    // const postJobFn = new Function(this, "bikcup-postjob-fn", {
-    //   functionName: `${config.deploymentEnv}-bickup-postjob-fn`,
-    //   runtime: Runtime.NODEJS_14_X,
-    //   code: new AssetCode("./src"),
-    //   handler: "jobs.createJob",
-    //   environment: {},
-    //   role: rwJobsTableLambdaRole
-    // });
     const postJobFn = new NodejsFunction(this, "bikcup-postjob-fn", {
       functionName: `${config.deploymentEnv}-bickup-postjob-fn`,
       runtime: Runtime.NODEJS_14_X,

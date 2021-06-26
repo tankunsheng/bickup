@@ -32,7 +32,7 @@ const createJob = async function (event: any, context: any) {
     return {
       body: JSON.stringify({
         statusCode: 200,
-        message: `Created Job for contact_no ${contact_no} at ${localISOTime}`,
+        message: `Created Job for contact_no ${contact_no} at ${localISOTime} and ${new Date(Date.now()).toISOString()}`,
       }),
     };
   } catch (err) {
