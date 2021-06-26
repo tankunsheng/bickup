@@ -17,7 +17,6 @@ import {
   Role,
   ManagedPolicy,
 } from "@aws-cdk/aws-iam";
-import * as kms from "@aws-cdk/aws-kms";
 
 import config from "./config";
 
@@ -32,9 +31,6 @@ export class BackendStack extends cdk.Stack {
     this.createDynamoDbStreams(table);
     this.createLambdaFunctions();
   }
-  // https://www.youtube.com/watch?v=XvD2FrS5yYM dynamodb keys
-  // https://www.youtube.com/watch?v=OjppS4RWWt8&t=1s&ab_channel=BeABetterDevBeABetterDev dynamodb streams
-  // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-dynamodb-readme.html dynamodb cdk
   createUserPool() {
     // Cognito User Pool with Email Sign-in Type.
     this.userPool = new UserPool(this, "bickup-user-pool", {
@@ -48,6 +44,7 @@ export class BackendStack extends cdk.Stack {
           required: true,
         },
       },
+      
       selfSignUpEnabled: true,
       passwordPolicy: {
         requireLowercase: false,
@@ -57,13 +54,22 @@ export class BackendStack extends cdk.Stack {
         requireDigits: true,
       },
     });
+    this.userPool.addDomain("bickup-user-pool-domain",{
+      cognitoDomain: {
+        domainPrefix: "dev-bickup"
+      }
+    })
     this.userPoolClient = new UserPoolClient(this, "bickup-user-pool-client", {
       userPool: this.userPool,
       userPoolClientName: `${config.deploymentEnv}-bickup-user-pool-client`,
     });
+    // https://www.youtube.com/watch?v=oFSU6rhFETk&t=1s&ab_channel=BeABetterDev login with cognito
   }
 
   createDynamoDb() {
+    // https://www.youtube.com/watch?v=XvD2FrS5yYM dynamodb keys
+    // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-dynamodb-readme.html dynamodb cdk
+
     this.dynamoDbJobsTable = new Table(this, "bickup-dynamodb", {
       tableName: `${config.deploymentEnv}-bickup-jobs-table`,
       partitionKey: {
@@ -79,11 +85,12 @@ export class BackendStack extends cdk.Stack {
       readCapacity: 3,
       writeCapacity: 3,
       stream: StreamViewType.NEW_AND_OLD_IMAGES,
-    });
+    }); 
 
     return this.dynamoDbJobsTable;
   }
   createDynamoDbStreams(table: Table) {
+    // https://www.youtube.com/watch?v=OjppS4RWWt8&t=1s&ab_channel=BeABetterDevBeABetterDev dynamodb streams
     const jobsTableStreamLambda = new NodejsFunction(
       this,
       "bickup-jobs-stream-fn",
@@ -98,18 +105,18 @@ export class BackendStack extends cdk.Stack {
       }
     );
 
-    jobsTableStreamLambda.addToRolePolicy(new PolicyStatement({
-      actions: [
-        "secretsmanager:GetResourcePolicy",
-        "secretsmanager:GetSecretValue",
-        "secretsmanager:DescribeSecret",
-        "secretsmanager:ListSecretVersionIds",
-        "secretsmanager:ListSecrets"
-      ],
-      resources: [
-        config.botTokenARN
-      ]
-    }));
+    jobsTableStreamLambda.addToRolePolicy(
+      new PolicyStatement({
+        actions: [
+          "secretsmanager:GetResourcePolicy",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:ListSecretVersionIds",
+          "secretsmanager:ListSecrets",
+        ],
+        resources: [config.botTokenARN],
+      })
+    );
 
     jobsTableStreamLambda.addEventSource(
       new DynamoEventSource(table, {
@@ -182,9 +189,9 @@ export class BackendStack extends cdk.Stack {
       entry: "./src/jobs.ts",
       handler: "createJob",
       role: rwJobsTableLambdaRole,
-      environment:{
-        JOBS_TABLE: config.jobsTable
-      }
+      environment: {
+        JOBS_TABLE: config.jobsTable,
+      },
     });
 
     const postJobLambdaApi = new LambdaRestApi(this, "bickup-postjob-api", {
