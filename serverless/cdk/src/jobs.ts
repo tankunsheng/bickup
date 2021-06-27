@@ -120,6 +120,7 @@ const handleJobStream = async function (event: any, context: any) {
     const response = await axios.post(
       `https://api.telegram.org/bot${botToken}/sendMessage`,
       {
+        parse_mode: "HTML",
         chat_id: process.env.CHAT_ID,
         text: `New Job Created\n<b>Pick up at: ${record.origin.S}</b>\n${process.env.SERVER}/job?id=${record.id.S}`,
         // text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
