@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import axios from "axios";
 import PageLayout from "../components/PageLayout";
-import "../css/booking.scoped.scss"
+import "../css/booking.scoped.scss";
 import {
   Form,
-  Input,
+  Input, 
   Button,
   DatePicker,
   InputNumber,
@@ -13,59 +13,50 @@ import {
 import "../css/index.css";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 const IndexPage = ({ location }: any) => {
-  // https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job
-  useEffect(() => {
-    axios
-      .post(
-        "https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job",
-        {
-          clientNumber: "clientNumber10",
-        }
-      )
-      .then((response) => {
-        console.log(response);
-      });
-  });
   const onFinish = (values: any) => {
     console.log("Success:", values);
+    axios
+      .post(
+        "https://gmz7m1aszi.execute-api.ap-southeast-1.amazonaws.com/dev/jobs",
+        values
+      )
+      .then((response) => {
+        console.log("success", response);
+      });
   };
   const Index = () => {
     const smallFormInputStyle: React.CSSProperties = {
       float: "left",
       minWidth: "10em",
     };
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 4 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 20 },
-      },
-    };
-    const formItemLayoutWithOutLabel = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 20, offset: 4 },
-      },
-    };
+
     return (
       <Form
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 14 }}
         onFinish={onFinish}
-        // initialValues={{ size: componentSize }}
-        // onValuesChange={onFormLayoutChange}
         size="large"
       >
-        {/* <Row>
-          <Col span={12}> */}
-        <Form.Item label="No. Pax" >
+        <Form.Item
+          label="No. Pax"
+          name="numPax"
+          rules={[{ required: true }]}
+          initialValue={1}
+        >
           <InputNumber min={1} max={10} style={smallFormInputStyle} />
         </Form.Item>
-        <Form.Item label="No. Bikes">
-          <InputNumber min={1} max={10} style={smallFormInputStyle} />
+        <Form.Item
+          label="No. Bikes"
+          name="numBikes"
+          rules={[{ required: true }]}
+          initialValue={1}
+        >
+          <InputNumber
+            min={1}
+            max={10}
+            style={smallFormInputStyle}
+            defaultValue={1}
+          />
         </Form.Item>
 
         <Form.Item label="Date">
@@ -76,79 +67,71 @@ const IndexPage = ({ location }: any) => {
           <TimePicker style={smallFormInputStyle} />
         </Form.Item>
 
-        <Form.Item 
+        <Form.Item
           label="Pick up point"
           name="origin"
           rules={[
             { required: true, message: "Please input your pick up point" },
           ]}
         >
-          <Input/>
+          <Input />
         </Form.Item>
-        <Form.List 
+        <Form.List
           name="destinations"
           rules={[
             {
               validator: async (_, destinations) => {
                 if (!destinations || destinations.length < 1) {
-                  return Promise.reject(new Error("Add at least one drop-off point"));
+                  return Promise.reject(
+                    new Error("Add at least one drop-off point")
+                  );
                 }
               },
             },
           ]}
         >
           {(fields, { add, remove }, { errors }) => (
-            <>
-              {fields.map((field, index) => (
-                // <Form.Item
-                //   {...(index === 0
-                //     ? formItemLayout
-                //     : formItemLayoutWithOutLabel)}
-                //   label={index === 0 ? "Drop-off point(s)" : ""}
-                //   required={false}
-                //   key={field.key}
-                // >
+            // <div className="ant-row ant-form-item" style={{ rowGap: "0px" }}>
+            <div>
+              {fields.map(({ key, name, fieldKey, ...restField }) => (
+                <div
+                  key={key}
+                  // style={{ display: "flex", width:"100%",marginBottom: 8 }}
+                  // align="baseline"
+                >
                   <Form.Item
-                   label="Drop-off point(s)"
-                    {...field}
-                    validateTrigger={["onChange", "onBlur"]}
+                    // style={{  width:"100%" }}
+                    label="Drop-off point(s)"
+                    {...restField}
+                    name={[name, "destination"]}
+                    fieldKey={[fieldKey, "destination"]}
                     rules={[
-                      {
-                        required: true,
-                        whitespace: true,
-                        message:
-                          "Please enter a drop-off point or remove this field",
-                      },
+                      { required: true, message: "Missing drop-off point" },
                     ]}
-                    // noStyle
                   >
-                    <Input className="ant-col ant-col-14"
+                    <Input
+                      className="ant-col ant-col-14"
                       placeholder="Drop-off point"
-                     
                     />
-                  {/* </Form.Item> */}
-                  {fields.length > 0 ? (
-                    <MinusCircleOutlined
-                      className="dynamic-delete-button"
-                   
-                      onClick={() => remove(field.name)}
-                    />
-                  ) : null}
-                </Form.Item>
+                  </Form.Item>
+                  <MinusCircleOutlined
+                    style={{ fontSize: "x-large" }}
+                    onClick={() => remove(name)}
+                  />
+                </div>
               ))}
               <Form.Item>
                 <Button
                   type="ghost"
                   onClick={() => add()}
-                 
                   icon={<PlusOutlined />}
                 >
                   Drop-off point
                 </Button>
-               
+
                 <Form.ErrorList errors={errors} />
               </Form.Item>
-            </>
+            </div>
           )}
         </Form.List>
 

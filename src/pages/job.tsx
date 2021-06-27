@@ -2,14 +2,12 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { StaticImage } from "gatsby-plugin-image";
 import PageLayout from "../components/PageLayout";
-import { Button, DatePicker, Space } from "antd";
+import { Button, Space } from "antd";
 import "../css/index.css";
-const IndexPage = ({ location }: any) => {
+const jobPage = ({ location }: any) => {
   // https://yuyofv3wvd.execute-api.ap-southeast-1.amazonaws.com/dev/job
-  useEffect(() => {
-  
-  });
-  const Index = () => {
+
+  const Job = () => {
     return (
       <div>
         <div>
@@ -22,17 +20,14 @@ const IndexPage = ({ location }: any) => {
             />
           </Space>
         </div>
-        <h1>Bick-up</h1>
-        <h2 className="font-light max-w-2xl mx-auto w-full text-xl dark:text-white text-gray-500 text-center py-8">
-          Our fleet of drivers provide bike transportation. Book now!
-        </h2>
+        
         <div className="flex items-center justify-center mt-4">
-          <Button size="large">Book Now</Button>
+          <a href="https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:8000/login/callback">Accept</a>
         </div>
       </div>
     );
   };
-  return <PageLayout content={<Index />} location={location} />;
+  return <PageLayout content={<Job />} location={location} />;
 };
 
-export default IndexPage;
+export default jobPage;

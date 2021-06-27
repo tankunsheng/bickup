@@ -1,5 +1,7 @@
 import axios from "axios";
 import * as AWS from "aws-sdk";
+import { v4 as uuid } from "uuid";
+
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
 });
@@ -12,6 +14,13 @@ class BetterDate extends Date {
   }
 }
 const createJob = async function (event: any, context: any) {
+  const reqBody = JSON.parse(event.body);
+  const contact_no = reqBody.contact_no;
+  const origin = reqBody.origin;
+  const numBikes = reqBody.numBikes;
+  const numPax = reqBody.numPax;
+
+  // const destLocation = reqBody.destinations;
   if (!process.env.JOBS_TABLE) {
     console.log("Jobs table name not specified");
     return;
@@ -19,11 +28,21 @@ const createJob = async function (event: any, context: any) {
   const now = new BetterDate();
   now.addHours(8);
 
-  const contact_no = "12345678";
+  // const contact_no = "12345678";
   const params = {
     Item: {
       contact_no: contact_no,
       created_at: now.toISOString(),
+      id: uuid(),
+      //origin
+      origin,
+
+      //destinations
+      //datetime pickup
+      //no.bikes
+      numBikes,
+      //no.pax
+      numPax
     },
     TableName: process.env.JOBS_TABLE,
   };

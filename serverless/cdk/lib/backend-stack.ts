@@ -57,7 +57,7 @@ export class BackendStack extends cdk.Stack {
     this.userPool.addDomain("bickup-user-pool-domain",{
       
       cognitoDomain: {
-        domainPrefix: "dev-bickup",
+        domainPrefix: `${config.deploymentEnv}-bickup`,
         
       }
     })
