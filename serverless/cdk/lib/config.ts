@@ -4,7 +4,7 @@ const config = {
         jobsTable: "dev-bickup-jobs-table",
         chatId: "-334215881",
         botTokenARN: "arn:aws:secretsmanager:ap-southeast-1:860039660571:secret:dev/bickup/bot/token-WvawqR",
-        server: "http://localhost:8000"
+        server: "http://127.0.0.1:8000"
     },
     prod: {
         deploymentEnv: "prod",
