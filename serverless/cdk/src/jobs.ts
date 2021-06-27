@@ -113,13 +113,18 @@ const handleJobStream = async function (event: any, context: any) {
     const botToken = JSON.parse(decryptedSecret.SecretString)[
       "dev-bickup-bot-token"
     ];
+    const record = event.Records[0].dynamodb.NewImage
+    console.log(record)
+    console.log(record.origin)
+    console.log(record.id)
     const response = await axios.post(
       `https://api.telegram.org/bot${botToken}/sendMessage`,
       {
         chat_id: process.env.CHAT_ID,
-        text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
-          event.Records[0].dynamodb.NewImage
-        )}`,
+        text: `New Job Created\n Pick up at: ${record.origin}\n ${process.env.SERVER}/job?id=${record.id}`,
+        // text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
+        //   event.Records[0].dynamodb.NewImage
+        // )}`,
       }
     );
     console.log(response);

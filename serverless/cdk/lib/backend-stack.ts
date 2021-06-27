@@ -106,6 +106,7 @@ export class BackendStack extends cdk.Stack {
         handler: "handleJobStream",
         environment: {
           CHAT_ID: config.chatId,
+          SERVER: config.server
         },
       }
     );

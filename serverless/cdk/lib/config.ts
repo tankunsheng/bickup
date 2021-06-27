@@ -3,13 +3,15 @@ const config = {
         deploymentEnv: "dev",
         jobsTable: "dev-bickup-jobs-table",
         chatId: "-334215881",
-        botTokenARN: "arn:aws:secretsmanager:ap-southeast-1:860039660571:secret:dev/bickup/bot/token-WvawqR"
+        botTokenARN: "arn:aws:secretsmanager:ap-southeast-1:860039660571:secret:dev/bickup/bot/token-WvawqR",
+        server: "http://localhost:8000"
     },
     prod: {
         deploymentEnv: "prod",
         jobsTable: "prod-bickup-jobs-table",
         chatId: "",
-        botTokenARN: ""
+        botTokenARN: "",
+        server: ""
     }
 }
 const env = process.env.env as keyof typeof config

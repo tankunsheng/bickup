@@ -137,11 +137,11 @@ const IndexPage = ({ location }: any) => {
 
         <Form.Item
           label="Phone Number"
-          name="phone"
+          name="contact_no"
           rules={[
             {
               required: true,
-              message: "Please input your phone number",
+              message: "Please input your contact number",
             },
             {
               validator: (_, value) =>
