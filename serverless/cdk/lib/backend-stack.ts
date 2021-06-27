@@ -204,6 +204,7 @@ export class BackendStack extends cdk.Stack {
       handler: postJobFn,
       proxy: false,
       deployOptions: { stageName: config.deploymentEnv },
+      // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html#cross-origin-resource-sharing-cors
       defaultCorsPreflightOptions: {
         allowOrigins: ["*"],
       },

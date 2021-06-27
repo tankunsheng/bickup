@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as AWS from "aws-sdk";
 import { v4 as uuid } from "uuid";
+import { handleResponse } from "./lib/helper";
 
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
@@ -42,7 +43,7 @@ const createJob = async function (event: any, context: any) {
       //no.bikes
       numBikes,
       //no.pax
-      numPax
+      numPax,
     },
     TableName: process.env.JOBS_TABLE,
   };
@@ -57,20 +58,26 @@ const createJob = async function (event: any, context: any) {
         }
       });
     });
-    return {
+    // return {
+    //   body: JSON.stringify({
+    //     statusCode: 200,
+    //     message: `Created Job for contact_no ${contact_no} at ${now.toISOString()}`,
+    //   }),
+    // };
+    return handleResponse(event, {
       body: JSON.stringify({
         statusCode: 200,
         message: `Created Job for contact_no ${contact_no} at ${now.toISOString()}`,
       }),
-    };
+    });
   } catch (err) {
     console.log("Error", err);
-    return {
+    return handleResponse(event,{
       body: JSON.stringify({
         statusCode: 500,
         message: err,
       }),
-    };
+    })
   }
 };
 
