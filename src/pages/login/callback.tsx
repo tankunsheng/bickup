@@ -5,7 +5,11 @@ import PageLayout from "../../components/PageLayout";
 import { Button, Space } from "antd";
 const callback = ({ location }: any) => {
   const CallBack = () => {
-    const url = window.location.href;
+    let url = ""
+    if(typeof window !== "undefined"){
+       url = window.location.href;
+    }
+   
     return (
       <div>
         <Space direction="vertical">
