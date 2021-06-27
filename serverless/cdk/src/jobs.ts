@@ -121,7 +121,7 @@ const handleJobStream = async function (event: any, context: any) {
       `https://api.telegram.org/bot${botToken}/sendMessage`,
       {
         chat_id: process.env.CHAT_ID,
-        text: `New Job Created\n Pick up at: ${record.origin}\n ${process.env.SERVER}/job?id=${record.id}`,
+        text: `New Job Created\n<b>Pick up at: ${record.origin.S}</b>\n${process.env.SERVER}/job?id=${record.id.S}`,
         // text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
         //   event.Records[0].dynamodb.NewImage
         // )}`,

@@ -55,7 +55,6 @@ const IndexPage = ({ location }: any) => {
             min={1}
             max={10}
             style={smallFormInputStyle}
-            defaultValue={1}
           />
         </Form.Item>
 
