@@ -122,7 +122,7 @@ const handleJobStream = async function (event: any, context: any) {
       {
         parse_mode: "HTML",
         chat_id: process.env.CHAT_ID,
-        text: `New Job Created\n<b>Pick up at: ${record.origin.S}</b>\n${process.env.SERVER}/job?id=${record.id.S}`,
+        text: `New Job Created\n<b>Pick up at: ${record.origin.S}</b>\n<a href="${process.env.SERVER}/job/${record.id.S}">Click to View</a>`,
         // text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
         //   event.Records[0].dynamodb.NewImage
         // )}`,
