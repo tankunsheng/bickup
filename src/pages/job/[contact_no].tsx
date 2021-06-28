@@ -8,8 +8,10 @@ import { Space } from "antd";
 import "../../css/index.css";
 const jobPage = ({ params, location }: any) => {
   const Job = () => {
-    const jobId = params.jobId;
-    console.log(jobId);
+    const contact_no = params.contact_no;
+    console.log(contact_no);
+    console.log(location.search)
+    
     useEffect(()=>{
         
     })
