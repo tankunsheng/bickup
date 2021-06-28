@@ -223,15 +223,22 @@ export class BackendStack extends cdk.Stack {
     const job = postJobLambdaApi.root.addResource("jobs");
     job.addMethod("POST");
     job.addMethod("PUT");
-    job.addMethod("GET", new LambdaIntegration(getJobFn),{
-      requestParameters: {
-        "method.request.path.jobId": true
-        // * Specify request parameters
-        // * as key-value pairs (string-to-Boolean mapping), with a source as the key and
-        // * a Boolean as the value. The Boolean specifies whether a parameter is required.
-        // * A source must match the format method.request.location.name, where the location
-        // * is querystring, path, or header, and name is a valid, unique parameter name.
-      }
-    });
+    postJobLambdaApi.root.addResource("{contact_no}");
+    job.addMethod("GET", new LambdaIntegration(getJobFn));
+    // job.addMethod("GET", new LambdaIntegration(getJobFn, {
+    //   proxy
+    //   requestParameters:{
+
+    //   }
+    // }),{
+    //   requestParameters: {
+    //     "method.request.path.jobId": true
+    //     // * Specify request parameters
+    //     // * as key-value pairs (string-to-Boolean mapping), with a source as the key and
+    //     // * a Boolean as the value. The Boolean specifies whether a parameter is required.
+    //     // * A source must match the format method.request.location.name, where the location
+    //     // * is querystring, path, or header, and name is a valid, unique parameter name.
+    //   }
+    // });
   }
 }

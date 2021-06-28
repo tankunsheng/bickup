@@ -80,29 +80,18 @@ const getJob = async function (event: any, context: any) {
     console.log("Jobs table name not specified");
     return;
   }
-  const jobId = event.pathParameters.jobId;
-  console.log(`jobId is = ${jobId}`)
+  const pathParams = event.pathParameters;
+  console.log(`jobId is = ${JSON.stringify(pathParams)}`)
   // const contact_no = "12345678";
   // const params = {
-  //   Item: {
-  //     contact_no: contact_no,
-  //     created_at: now.toISOString(),
-  //     id: uuid(),
-  //     //origin
-  //     origin,
-
-  //     //destinations
-  //     //datetime pickup
-  //     //no.bikes
-  //     numBikes,
-  //     //no.pax
-  //     numPax,
+  //   Key: {
+  //     "" : jobId
   //   },
   //   TableName: process.env.JOBS_TABLE,
   // };
   // try {
   //   await new Promise((resolve, reject) => {
-  //     client.put(params, function (err: any, data: any) {
+  //     client.get(params, function (err: any, data: any) {
   //       if (err) {
   //         reject(err);
   //       } else {
