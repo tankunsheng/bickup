@@ -220,11 +220,11 @@ export class BackendStack extends cdk.Stack {
         allowOrigins: ["*"],
       },
     });
-    const job = postJobLambdaApi.root.addResource("jobs");
-    job.addMethod("POST");
-    job.addMethod("PUT");
-    postJobLambdaApi.root.addResource("{contact_no}");
-    job.addMethod("GET", new LambdaIntegration(getJobFn));
+    const jobs = postJobLambdaApi.root.addResource("jobs");
+    jobs.addMethod("POST");
+    jobs.addMethod("PUT");
+    const singleJob = jobs.addResource("{contact_no}");
+    singleJob.addMethod("GET", new LambdaIntegration(getJobFn));
     // job.addMethod("GET", new LambdaIntegration(getJobFn, {
     //   proxy
     //   requestParameters:{
