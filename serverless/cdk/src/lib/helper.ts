@@ -1,5 +1,6 @@
 const whitelist: Array<string> = [
   "http://localhost:8000",
+  "http://127.0.0.1:8000",
   "http://dev-static-bickup.s3-website-ap-southeast-1.amazonaws.com",
   "http://dev-bickup-static-site.s3-website-ap-southeast-1.amazonaws.com",
 ];
