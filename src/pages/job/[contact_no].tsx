@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { StaticImage } from "gatsby-plugin-image";
 import axios from "axios";
+import queryString from "query-string"
 import PageLayout from "../../components/PageLayout";
 import { Space } from "antd";
 import "../../css/index.css";
@@ -11,9 +12,11 @@ const jobPage = ({ params, location }: any) => {
     const contact_no = params.contact_no;
     console.log(contact_no);
     console.log(location.search)
-    
+    console.log(queryString.parse(location.search))
     useEffect(()=>{
-        
+        axios.get(`https://gmz7m1aszi.execute-api.ap-southeast-1.amazonaws.com/dev${location.pathname+location.search}`).then(res=>{
+          console.log(res)
+        })
     })
     return (
       <div>

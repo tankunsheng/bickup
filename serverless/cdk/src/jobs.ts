@@ -66,12 +66,12 @@ const createJob = async function (event: any, context: any) {
     });
   } catch (err) {
     console.log("Error", err);
-    return handleResponse(event,{
+    return handleResponse(event, {
       body: JSON.stringify({
         statusCode: 500,
         message: err,
       }),
-    })
+    });
   }
 };
 const getJob = async function (event: any, context: any) {
@@ -80,10 +80,16 @@ const getJob = async function (event: any, context: any) {
     console.log("Jobs table name not specified");
     return;
   }
-  const pathParams = event.pathParameters;
-  const queryStringParams = event.queryStringParameters;
-  console.log(`contactNo is = ${JSON.stringify(pathParams)}`)
-  console.log(`dateTime is = ${JSON.stringify(queryStringParams)}`)
+  const contact_no = event.pathParameters.contact_no;
+  const created_at = event.queryStringParameters.datetime;
+  console.log(`contactNo is = ${contact_no}`);
+  console.log(`dateTime is = ${created_at}`);
+  return handleResponse(event, {
+    body: JSON.stringify({
+      statusCode: 200,
+      message: contact_no+created_at,
+    }),
+  });
   // const contact_no = "12345678";
   // const params = {
   //   Key: {
@@ -151,10 +157,10 @@ const handleJobStream = async function (event: any, context: any) {
     const botToken = JSON.parse(decryptedSecret.SecretString)[
       "dev-bickup-bot-token"
     ];
-    const record = event.Records[0].dynamodb.NewImage
-    console.log(record)
-    console.log(record.origin)
-    console.log(record.id)
+    const record = event.Records[0].dynamodb.NewImage;
+    console.log(record);
+    console.log(record.origin);
+    console.log(record.id);
     const response = await axios.post(
       `https://api.telegram.org/bot${botToken}/sendMessage`,
       {
