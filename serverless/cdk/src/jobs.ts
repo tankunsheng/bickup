@@ -81,7 +81,9 @@ const getJob = async function (event: any, context: any) {
     return;
   }
   const pathParams = event.pathParameters;
-  console.log(`jobId is = ${JSON.stringify(pathParams)}`)
+  const queryStringParams = event.queryStringParameters;
+  console.log(`contactNo is = ${JSON.stringify(pathParams)}`)
+  console.log(`dateTime is = ${JSON.stringify(queryStringParams)}`)
   // const contact_no = "12345678";
   // const params = {
   //   Key: {
