@@ -58,12 +58,6 @@ const createJob = async function (event: any, context: any) {
         }
       });
     });
-    // return {
-    //   body: JSON.stringify({
-    //     statusCode: 200,
-    //     message: `Created Job for contact_no ${contact_no} at ${now.toISOString()}`,
-    //   }),
-    // };
     return handleResponse(event, {
       body: JSON.stringify({
         statusCode: 200,
@@ -79,6 +73,59 @@ const createJob = async function (event: any, context: any) {
       }),
     })
   }
+};
+const getJob = async function (event: any, context: any) {
+  // const destLocation = reqBody.destinations;
+  if (!process.env.JOBS_TABLE) {
+    console.log("Jobs table name not specified");
+    return;
+  }
+  const jobId = event.pathParameters.jobId;
+  console.log(`jobId is = ${jobId}`)
+  // const contact_no = "12345678";
+  // const params = {
+  //   Item: {
+  //     contact_no: contact_no,
+  //     created_at: now.toISOString(),
+  //     id: uuid(),
+  //     //origin
+  //     origin,
+
+  //     //destinations
+  //     //datetime pickup
+  //     //no.bikes
+  //     numBikes,
+  //     //no.pax
+  //     numPax,
+  //   },
+  //   TableName: process.env.JOBS_TABLE,
+  // };
+  // try {
+  //   await new Promise((resolve, reject) => {
+  //     client.put(params, function (err: any, data: any) {
+  //       if (err) {
+  //         reject(err);
+  //       } else {
+  //         console.log(`resolved data is ${data}`);
+  //         resolve(data);
+  //       }
+  //     });
+  //   });
+  //   return handleResponse(event, {
+  //     body: JSON.stringify({
+  //       statusCode: 200,
+  //       message: `Created Job for contact_no ${contact_no} at ${now.toISOString()}`,
+  //     }),
+  //   });
+  // } catch (err) {
+  //   console.log("Error", err);
+  //   return handleResponse(event,{
+  //     body: JSON.stringify({
+  //       statusCode: 500,
+  //       message: err,
+  //     }),
+  //   })
+  // }
 };
 
 // telegram restapis reference: https://core.telegram.org/bots/api#making-requests
@@ -143,4 +190,4 @@ const handleJobStream = async function (event: any, context: any) {
     };
   }
 };
-export { createJob, handleJobStream };
+export { createJob, handleJobStream, getJob };

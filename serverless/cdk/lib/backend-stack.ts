@@ -1,6 +1,6 @@
 import * as cdk from "@aws-cdk/core";
 import { UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
-import { LambdaRestApi } from "@aws-cdk/aws-apigateway";
+import { LambdaRestApi, LambdaIntegration } from "@aws-cdk/aws-apigateway";
 import { Table, AttributeType, StreamViewType } from "@aws-cdk/aws-dynamodb";
 import {
   Function,
@@ -199,6 +199,16 @@ export class BackendStack extends cdk.Stack {
         JOBS_TABLE: config.jobsTable,
       },
     });
+    const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
+      functionName: `${config.deploymentEnv}-bickup-getjob-fn`,
+      runtime: Runtime.NODEJS_14_X,
+      entry: "./src/jobs.ts",
+      handler: "getJob",
+      role: rwJobsTableLambdaRole,
+      environment: {
+        JOBS_TABLE: config.jobsTable,
+      },
+    });
 
     const postJobLambdaApi = new LambdaRestApi(this, "bickup-postjob-api", {
       restApiName: `${config.deploymentEnv}-bickup-postjob-api`,
@@ -213,5 +223,15 @@ export class BackendStack extends cdk.Stack {
     const job = postJobLambdaApi.root.addResource("jobs");
     job.addMethod("POST");
     job.addMethod("PUT");
+    job.addMethod("GET", new LambdaIntegration(getJobFn),{
+      requestParameters: {
+        "method.request.path.jobId": true
+        // * Specify request parameters
+        // * as key-value pairs (string-to-Boolean mapping), with a source as the key and
+        // * a Boolean as the value. The Boolean specifies whether a parameter is required.
+        // * A source must match the format method.request.location.name, where the location
+        // * is querystring, path, or header, and name is a valid, unique parameter name.
+      }
+    });
   }
 }
