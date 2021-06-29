@@ -75,7 +75,6 @@ const createJob = async function (event: any, context: any) {
   }
 };
 const getJob = async function (event: any, context: any) {
-  // const destLocation = reqBody.destinations;
   if (!process.env.JOBS_TABLE) {
     console.log("Jobs table name not specified");
     return;
@@ -84,45 +83,49 @@ const getJob = async function (event: any, context: any) {
   const created_at = event.queryStringParameters.datetime;
   console.log(`contactNo is = ${contact_no}`);
   console.log(`dateTime is = ${created_at}`);
-  return handleResponse(event, {
-    body: JSON.stringify({
-      statusCode: 200,
-      message: contact_no+created_at,
-    }),
-  });
+  // return handleResponse(event, {
+  //   body: JSON.stringify({
+  //     statusCode: 200,
+  //     message: contact_no+created_at,
+  //   }),
+  // });
   // const contact_no = "12345678";
-  // const params = {
-  //   Key: {
-  //     "" : jobId
-  //   },
-  //   TableName: process.env.JOBS_TABLE,
-  // };
-  // try {
-  //   await new Promise((resolve, reject) => {
-  //     client.get(params, function (err: any, data: any) {
-  //       if (err) {
-  //         reject(err);
-  //       } else {
-  //         console.log(`resolved data is ${data}`);
-  //         resolve(data);
-  //       }
-  //     });
-  //   });
-  //   return handleResponse(event, {
-  //     body: JSON.stringify({
-  //       statusCode: 200,
-  //       message: `Created Job for contact_no ${contact_no} at ${now.toISOString()}`,
-  //     }),
-  //   });
-  // } catch (err) {
-  //   console.log("Error", err);
-  //   return handleResponse(event,{
-  //     body: JSON.stringify({
-  //       statusCode: 500,
-  //       message: err,
-  //     }),
-  //   })
-  // }
+  const params = {
+    Key: {
+      "contact_no" : contact_no,
+      "created_at": created_at
+    },
+    TableName: process.env.JOBS_TABLE,
+  };
+  try {
+    const job = await new Promise((resolve, reject) => {
+      client.get(params, function (err: any, data: any) {
+        if (err) {
+          reject(err);
+        } else {
+          console.log(`resolved data is ${data}`);
+          resolve(data);
+        }
+      });
+    });
+    console.log("job retrieved")
+    console.log(job)
+    return handleResponse(event, {
+      statusCode: 200,
+      body: JSON.stringify({
+        statusCode: 200,
+        job,
+      }),
+    });
+  } catch (err) {
+    console.log("Error", err);
+    return handleResponse(event,{
+      body: JSON.stringify({
+        statusCode: 500,
+        message: err,
+      }),
+    })
+  }
 };
 
 // telegram restapis reference: https://core.telegram.org/bots/api#making-requests
