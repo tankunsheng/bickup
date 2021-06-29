@@ -81,25 +81,16 @@ const getJob = async function (event: any, context: any) {
   }
   const contact_no = event.pathParameters.contact_no;
   const created_at = event.queryStringParameters.datetime;
-  console.log(`contactNo is = ${contact_no}`);
-  console.log(`dateTime is = ${created_at}`);
-  // return handleResponse(event, {
-  //   body: JSON.stringify({
-  //     statusCode: 200,
-  //     message: contact_no+created_at,
-  //   }),
-  // });
-  // const contact_no = "12345678";
   const params = {
     Key: {
-      "contact_no" : contact_no,
-      "created_at": created_at
+      contact_no: contact_no,
+      created_at: created_at,
     },
     TableName: process.env.JOBS_TABLE,
   };
-  try {
-    const job = await new Promise((resolve, reject) => {
-      client.get(params, function (err: any, data: any) {
+  const job = await new Promise<AWS.DynamoDB.DocumentClient.GetItemOutput>(
+    (resolve, reject) => {
+      client.get(params, function (err, data) {
         if (err) {
           reject(err);
         } else {
@@ -107,25 +98,24 @@ const getJob = async function (event: any, context: any) {
           resolve(data);
         }
       });
-    });
-    console.log("job retrieved")
-    console.log(job)
-    return handleResponse(event, {
-      statusCode: 200,
-      body: JSON.stringify({
-        statusCode: 200,
-        job,
-      }),
-    });
-  } catch (err) {
+    }
+  ).catch((err) => {
     console.log("Error", err);
-    return handleResponse(event,{
+    return handleResponse(event, {
       body: JSON.stringify({
         statusCode: 500,
         message: err,
       }),
-    })
-  }
+    });
+  });
+  console.log("job retrieved");
+  console.log(job);
+  return handleResponse(event, {
+    statusCode: 200,
+    body: JSON.stringify({
+      job: job.Item,
+    }),
+  });
 };
 
 // telegram restapis reference: https://core.telegram.org/bots/api#making-requests
@@ -191,3 +181,13 @@ const handleJobStream = async function (event: any, context: any) {
   }
 };
 export { createJob, handleJobStream, getJob };
+
+//Lambda proxy integration expects responses to be in the following format
+// {
+//   "isBase64Encoded": true|false,
+//   "statusCode": httpStatusCode,
+//   "headers": { "headerName": "headerValue", ... },
+//   "multiValueHeaders": { "headerName": ["headerValue", "headerValue2", ...], ... },
+//   "body": "..."
+// }
+// Refer to https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html for more details

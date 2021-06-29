@@ -6,7 +6,6 @@ import {
   Function,
   Runtime,
   AssetCode,
-  Code,
   StartingPosition,
 } from "@aws-cdk/aws-lambda";
 import { NodejsFunction } from "@aws-cdk/aws-lambda-nodejs";
@@ -213,7 +212,7 @@ export class BackendStack extends cdk.Stack {
     const postJobLambdaApi = new LambdaRestApi(this, "bickup-postjob-api", {
       restApiName: `${config.deploymentEnv}-bickup-postjob-api`,
       handler: postJobFn,
-      proxy: false,
+      proxy: false, //can this be set to true?
       deployOptions: { stageName: config.deploymentEnv },
       // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html#cross-origin-resource-sharing-cors
       defaultCorsPreflightOptions: {
@@ -225,20 +224,5 @@ export class BackendStack extends cdk.Stack {
     jobs.addMethod("PUT");
     const singleJob = jobs.addResource("{contact_no}");
     singleJob.addMethod("GET", new LambdaIntegration(getJobFn));
-    // job.addMethod("GET", new LambdaIntegration(getJobFn, {
-    //   proxy
-    //   requestParameters:{
-
-    //   }
-    // }),{
-    //   requestParameters: {
-    //     "method.request.path.jobId": true
-    //     // * Specify request parameters
-    //     // * as key-value pairs (string-to-Boolean mapping), with a source as the key and
-    //     // * a Boolean as the value. The Boolean specifies whether a parameter is required.
-    //     // * A source must match the format method.request.location.name, where the location
-    //     // * is querystring, path, or header, and name is a valid, unique parameter name.
-    //   }
-    // });
   }
 }
