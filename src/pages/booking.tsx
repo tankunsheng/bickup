@@ -1,24 +1,26 @@
 import React from "react";
+import moment from "moment";
 import axios from "axios";
 import PageLayout from "../components/PageLayout";
 import "../css/booking.scoped.scss";
-import {
-  Form,
-  Input, 
-  Button,
-  DatePicker,
-  InputNumber,
-  TimePicker,
-} from "antd";
+import { Form, Input, Button, DatePicker, InputNumber, TimePicker } from "antd";
 import "../css/index.css";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 const IndexPage = ({ location }: any) => {
   const onFinish = (values: any) => {
     console.log("Success:", values);
+    const pickupTime = moment(values.pickupTime).format("HH:mm");
+    const pickupDate = moment(values.pickupTime).format("MMMM Do YYYY");
+    console.log(pickupTime);
+    console.log(pickupDate);
     axios
       .post(
         "https://gmz7m1aszi.execute-api.ap-southeast-1.amazonaws.com/dev/jobs",
-        values
+        {
+          ...values,
+          pickupTime,
+          pickupDate,
+        }
       )
       .then((response) => {
         console.log("success", response);
@@ -51,19 +53,15 @@ const IndexPage = ({ location }: any) => {
           rules={[{ required: true }]}
           initialValue={1}
         >
-          <InputNumber
-            min={1}
-            max={10}
-            style={smallFormInputStyle}
-          />
+          <InputNumber min={1} max={10} style={smallFormInputStyle} />
         </Form.Item>
 
-        <Form.Item label="Date">
+        <Form.Item label="Date" name="pickupDate">
           <DatePicker style={smallFormInputStyle} />
         </Form.Item>
 
-        <Form.Item name="time-picker" label="Time">
-          <TimePicker style={smallFormInputStyle} />
+        <Form.Item name="pickupTime" label="Time">
+          <TimePicker style={smallFormInputStyle} format="HH:mm" />
         </Form.Item>
 
         <Form.Item

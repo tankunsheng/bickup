@@ -20,8 +20,10 @@ const createJob = async function (event: any, context: any) {
   const origin = reqBody.origin;
   const numBikes = reqBody.numBikes;
   const numPax = reqBody.numPax;
+  const destinations = reqBody.destinations;
+  const pickupDate = reqBody.pickupDate;
+  const pickupTime = reqBody.pickupTime;
 
-  // const destLocation = reqBody.destinations;
   if (!process.env.JOBS_TABLE) {
     console.log("Jobs table name not specified");
     return;
@@ -29,20 +31,16 @@ const createJob = async function (event: any, context: any) {
   const now = new BetterDate();
   now.addHours(8);
 
-  // const contact_no = "12345678";
   const params = {
     Item: {
       contact_no: contact_no,
       created_at: now.toISOString(),
       id: uuid(),
-      //origin
       origin,
-
-      //destinations
-      //datetime pickup
-      //no.bikes
+      destinations,
+      pickupDate,
+      pickupTime,
       numBikes,
-      //no.pax
       numPax,
     },
     TableName: process.env.JOBS_TABLE,
