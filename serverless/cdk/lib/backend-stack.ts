@@ -1,6 +1,6 @@
 import * as cdk from "@aws-cdk/core";
 import { UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
-import { LambdaRestApi, LambdaIntegration } from "@aws-cdk/aws-apigateway";
+import { LambdaRestApi, LambdaIntegration, CognitoUserPoolsAuthorizer  } from "@aws-cdk/aws-apigateway";
 import { Table, AttributeType, StreamViewType } from "@aws-cdk/aws-dynamodb";
 import {
   Function,
@@ -198,17 +198,6 @@ export class BackendStack extends cdk.Stack {
         JOBS_TABLE: config.jobsTable,
       },
     });
-    const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
-      functionName: `${config.deploymentEnv}-bickup-getjob-fn`,
-      runtime: Runtime.NODEJS_14_X,
-      entry: "./src/jobs.ts",
-      handler: "getJob",
-      role: rwJobsTableLambdaRole,
-      environment: {
-        JOBS_TABLE: config.jobsTable,
-      },
-    });
-
     const postJobLambdaApi = new LambdaRestApi(this, "bickup-postjob-api", {
       restApiName: `${config.deploymentEnv}-bickup-postjob-api`,
       handler: postJobFn,
@@ -219,9 +208,33 @@ export class BackendStack extends cdk.Stack {
         allowOrigins: ["*"],
       },
     });
+    const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
+      functionName: `${config.deploymentEnv}-bickup-getjob-fn`,
+      runtime: Runtime.NODEJS_14_X,
+      entry: "./src/jobs.ts",
+      handler: "getJob",
+      role: rwJobsTableLambdaRole,
+      environment: {
+        JOBS_TABLE: config.jobsTable,
+      },
+    });
+    const patchJobFn = new NodejsFunction(this, "bickup-patchjob-fn", {
+      functionName: `${config.deploymentEnv}-bickup-patchjob-fn`,
+      runtime: Runtime.NODEJS_14_X,
+      entry: "./src/jobs.ts",
+      handler: "patchJob",
+      role: rwJobsTableLambdaRole,
+      environment: {
+        JOBS_TABLE: config.jobsTable,
+      },
+    })
+    //todo: implement cognito userpool authorizer to protect patchJobFn api
+    //https://stackoverflow.com/questions/52726914/aws-cdk-user-pool-authorizer
+    //https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-apigateway.CognitoUserPoolsAuthorizer.html
+
     const jobs = postJobLambdaApi.root.addResource("jobs");
     jobs.addMethod("POST");
-    jobs.addMethod("PUT");
+    jobs.addMethod("PATCH", new LambdaIntegration(patchJobFn));
     const singleJob = jobs.addResource("{contact_no}");
     singleJob.addMethod("GET", new LambdaIntegration(getJobFn));
   }

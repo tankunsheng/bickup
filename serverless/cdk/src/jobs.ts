@@ -42,6 +42,7 @@ const createJob = async function (event: any, context: any) {
       pickupTime,
       numBikes,
       numPax,
+      status: "open"
     },
     TableName: process.env.JOBS_TABLE,
   };
@@ -57,16 +58,16 @@ const createJob = async function (event: any, context: any) {
       });
     });
     return handleResponse(event, {
+      statusCode: 200,
       body: JSON.stringify({
-        statusCode: 200,
         message: `Created Job for contact_no ${contact_no} at ${now.toISOString()}`,
       }),
     });
   } catch (err) {
     console.log("Error", err);
     return handleResponse(event, {
+      statusCode: 500,
       body: JSON.stringify({
-        statusCode: 500,
         message: err,
       }),
     });
@@ -115,6 +116,21 @@ const getJob = async function (event: any, context: any) {
     }),
   });
 };
+
+const patchJob = async function(event:any, context:any){
+  const reqBody = JSON.parse(event.body);
+  const headers = event.headers
+  console.log(headers)
+  console.log(JSON.stringify(headers))
+  console.log(reqBody)
+  return handleResponse(event, {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: `your headers are ${JSON.stringify(headers)}`
+    }),
+  });
+}
+
 
 // telegram restapis reference: https://core.telegram.org/bots/api#making-requests
 // simple messages can be sent in the format of POST https://api.telegram.org/bot1891683701:AAFRELCirvrwZldZ0E-NaWo-4hHx-IS9OJ4/sendMessage
@@ -178,7 +194,7 @@ const handleJobStream = async function (event: any, context: any) {
     };
   }
 };
-export { createJob, handleJobStream, getJob };
+export { createJob, handleJobStream, getJob, patchJob };
 
 //Lambda proxy integration expects responses to be in the following format
 // {
