@@ -234,7 +234,7 @@ export class BackendStack extends cdk.Stack {
     //todo: implement cognito userpool authorizer to protect patchJobFn api
     //https://stackoverflow.com/questions/52726914/aws-cdk-user-pool-authorizer
     //https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-apigateway.CognitoUserPoolsAuthorizer.html
-    const userPoolAuthorizer = new CognitoUserPoolsAuthorizer(this, "", {
+    const userPoolAuthorizer = new CognitoUserPoolsAuthorizer(this, "bickup-api-authorizer", {
       cognitoUserPools: [this.userPool],
       authorizerName: `${config.deploymentEnv}-bickup-patchjob-authorizer`,
       identitySource: "Authorization"
