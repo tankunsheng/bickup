@@ -127,14 +127,14 @@ const getJob = async function (event: any, context: any) {
 };
 
 const patchJob = async function(event:APIGatewayProxyEvent, context:any){
-  if(!event.body){
-    return handleResponse(event, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: `Empty request body received`,
-      }),
-    });
-  }
+  // if(!event.body){
+  //   return handleResponse(event, {
+  //     statusCode: 400,
+  //     body: JSON.stringify({
+  //       message: `Empty request body received`,
+  //     }),
+  //   });
+  // }
   //header 'Authorizer' will always be provided since apigateway authorizer ensures of this
   //optional check included just in case
   const idToken = event.headers.Authorizer
@@ -147,11 +147,11 @@ const patchJob = async function(event:APIGatewayProxyEvent, context:any){
     });
   }
   const decoded = verifyAndDecodeJWT(idToken)
-  const reqBody = JSON.parse(event.body);
+  // const reqBody = JSON.parse(event.body);
   const headers = event.headers
   console.log(headers)
   console.log(JSON.stringify(headers))
-  console.log(reqBody)
+  // console.log(reqBody)
 
   //update dynamodb record with the driver's email
   return handleResponse(event, {
