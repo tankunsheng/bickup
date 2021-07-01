@@ -74,8 +74,8 @@ const verifyAndDecodeJWT = function (jwtString: string) {
     throw new Error("Cannot find corresponding jwk for the jwt");
   }
   try {
-    
-    console.log(typeof jwkToBuffer);
+    console.log(`jwkToBuffer type is ${typeof jwkToBuffer}`);
+    console.log(jwkToBuffer);
     console.log("before jwkToPem");
     const pem = jwkToBuffer({
       e: jwk.e,
