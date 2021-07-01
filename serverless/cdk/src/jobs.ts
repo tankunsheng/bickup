@@ -3,6 +3,7 @@ import * as AWS from "aws-sdk";
 import { v4 as uuid } from "uuid";
 import { handleResponse, verifyAndDecodeJWT } from "./lib/helper";
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda"
+import * as jwkToBuffer from "jwk-to-pem";
 
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
@@ -137,6 +138,7 @@ const patchJob = async function(event:APIGatewayProxyEvent, context:any){
   // }
   //header 'Authorizer' will always be provided since apigateway authorizer ensures of this
   //optional check included just in case
+  console.log(`jwkToBuffer type is ${typeof jwkToBuffer}`)
   const idToken = event.headers.Authorizer
   if(!idToken){
     return handleResponse(event, {
