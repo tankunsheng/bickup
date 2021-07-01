@@ -139,6 +139,7 @@ const patchJob = async function(event:APIGatewayProxyEvent, context:any){
   //header 'Authorizer' will always be provided since apigateway authorizer ensures of this
   //optional check included just in case
   console.log(`jwkToBuffer type is ${typeof jwkToBuffer}`)
+  console.log(jwkToBuffer)
   const idToken = event.headers.Authorizer
   if(!idToken){
     return handleResponse(event, {
