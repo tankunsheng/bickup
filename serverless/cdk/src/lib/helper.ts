@@ -60,7 +60,7 @@ const verifyAndDecodeJWT = function (jwtString: string) {
   //3. convert the public key in jwks to public key pem format
   //4. verify the jwt with this public pem
   let decodedJwtUnverified = jwtLib.decode(
-    jwt,
+    jwtString,
     { complete: true }
   );
   if (!decodedJwtUnverified ) {
