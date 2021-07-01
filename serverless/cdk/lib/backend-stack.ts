@@ -1,6 +1,11 @@
 import * as cdk from "@aws-cdk/core";
 import { UserPool, UserPoolClient } from "@aws-cdk/aws-cognito";
-import { LambdaRestApi, LambdaIntegration, CognitoUserPoolsAuthorizer  } from "@aws-cdk/aws-apigateway";
+import {
+  LambdaRestApi,
+  LambdaIntegration,
+  CognitoUserPoolsAuthorizer,
+  AuthorizationType,
+} from "@aws-cdk/aws-apigateway";
 import { Table, AttributeType, StreamViewType } from "@aws-cdk/aws-dynamodb";
 import {
   Function,
@@ -43,7 +48,7 @@ export class BackendStack extends cdk.Stack {
           required: true,
         },
       },
-      
+
       selfSignUpEnabled: true,
       passwordPolicy: {
         requireLowercase: false,
@@ -53,16 +58,14 @@ export class BackendStack extends cdk.Stack {
         requireDigits: true,
       },
     });
-    this.userPool.addDomain("bickup-user-pool-domain",{
-      
+    this.userPool.addDomain("bickup-user-pool-domain", {
       cognitoDomain: {
         domainPrefix: `${config.deploymentEnv}-bickup`,
-        
-      }
-    })
+      },
+    });
     this.userPoolClient = new UserPoolClient(this, "bickup-user-pool-client", {
       oAuth: {
-        callbackUrls:["http://localhost:8000/login/callback"]
+        callbackUrls: ["http://localhost:8000/login/callback"],
       },
       userPool: this.userPool,
       userPoolClientName: `${config.deploymentEnv}-bickup-user-pool-client`,
@@ -89,7 +92,7 @@ export class BackendStack extends cdk.Stack {
       readCapacity: 3,
       writeCapacity: 3,
       stream: StreamViewType.NEW_AND_OLD_IMAGES,
-    }); 
+    });
 
     return this.dynamoDbJobsTable;
   }
@@ -105,7 +108,7 @@ export class BackendStack extends cdk.Stack {
         handler: "handleJobStream",
         environment: {
           CHAT_ID: config.chatId,
-          SERVER: config.server
+          SERVER: config.server,
         },
       }
     );
@@ -227,14 +230,21 @@ export class BackendStack extends cdk.Stack {
       environment: {
         JOBS_TABLE: config.jobsTable,
       },
-    })
+    });
     //todo: implement cognito userpool authorizer to protect patchJobFn api
     //https://stackoverflow.com/questions/52726914/aws-cdk-user-pool-authorizer
     //https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-apigateway.CognitoUserPoolsAuthorizer.html
-
+    const userPoolAuthorizer = new CognitoUserPoolsAuthorizer(this, "", {
+      cognitoUserPools: [this.userPool],
+      authorizerName: `${config.deploymentEnv}-bickup-patchjob-authorizer`,
+      identitySource: "Authorization"
+    });
     const jobs = postJobLambdaApi.root.addResource("jobs");
     jobs.addMethod("POST");
-    jobs.addMethod("PATCH", new LambdaIntegration(patchJobFn));
+    jobs.addMethod("PATCH", new LambdaIntegration(patchJobFn), {
+      authorizationType: AuthorizationType.COGNITO,
+      authorizer: userPoolAuthorizer
+    });
     const singleJob = jobs.addResource("{contact_no}");
     singleJob.addMethod("GET", new LambdaIntegration(getJobFn));
   }
