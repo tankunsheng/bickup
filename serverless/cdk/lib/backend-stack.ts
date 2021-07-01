@@ -237,7 +237,7 @@ export class BackendStack extends cdk.Stack {
     const userPoolAuthorizer = new CognitoUserPoolsAuthorizer(this, "bickup-api-authorizer", {
       cognitoUserPools: [this.userPool],
       authorizerName: `${config.deploymentEnv}-bickup-patchjob-authorizer`,
-      identitySource: "Authorization"
+      identitySource: "method.request.header.Authorizer"
     });
     const jobs = postJobLambdaApi.root.addResource("jobs");
     jobs.addMethod("POST");
