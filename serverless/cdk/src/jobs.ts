@@ -1,7 +1,8 @@
 import axios from "axios";
 import * as AWS from "aws-sdk";
 import { v4 as uuid } from "uuid";
-import { handleResponse } from "./lib/helper";
+import { handleResponse, verifyAndDecodeJWT } from "./lib/helper";
+import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda"
 
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
@@ -14,7 +15,15 @@ class BetterDate extends Date {
     this.setTime(this.getTime() + hoursToAdd * 60 * 60 * 1000);
   }
 }
-const createJob = async function (event: any, context: any) {
+const createJob = async function (event: APIGatewayProxyEvent, context: any) {
+  if(!event.body){
+    return handleResponse(event, {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: `Empty request body received`,
+      }),
+    });
+  }
   const reqBody = JSON.parse(event.body);
   const contact_no = reqBody.contact_no;
   const origin = reqBody.origin;
@@ -117,16 +126,38 @@ const getJob = async function (event: any, context: any) {
   });
 };
 
-const patchJob = async function(event:any, context:any){
+const patchJob = async function(event:APIGatewayProxyEvent, context:any){
+  if(!event.body){
+    return handleResponse(event, {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: `Empty request body received`,
+      }),
+    });
+  }
+  //header 'Authorizer' will always be provided since apigateway authorizer ensures of this
+  //optional check included just in case
+  const idToken = event.headers.Authorizer
+  if(!idToken){
+    return handleResponse(event, {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: `Authorizer header missing`,
+      }),
+    });
+  }
+  const decoded = verifyAndDecodeJWT(idToken)
   const reqBody = JSON.parse(event.body);
   const headers = event.headers
   console.log(headers)
   console.log(JSON.stringify(headers))
   console.log(reqBody)
+
+  //update dynamodb record with the driver's email
   return handleResponse(event, {
     statusCode: 200,
     body: JSON.stringify({
-      message: `your headers are ${JSON.stringify(headers)}`
+      message: `your headers are ${JSON.stringify(headers)} decoded ${decoded.email}`
     }),
   });
 }
