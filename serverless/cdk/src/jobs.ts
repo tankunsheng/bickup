@@ -171,7 +171,7 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
       created_at: created_at,
     },
     UpdateExpression: "set #driver = :driver, #status = :status",
-    ExpressionAttributeNames: { "#driver": "driver" },
+    ExpressionAttributeNames: { "#driver": "driver", "#statue": "status" },
     ExpressionAttributeValues: {
       ":driver": decoded.email,
       ":status": "accepted",
