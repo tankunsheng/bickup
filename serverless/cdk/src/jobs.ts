@@ -183,10 +183,20 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
   const result = await new Promise((resolve, reject) => {
     client.update(params, function (err, data) {
       if (err) {
+        console.log(`error ${err}`)
         reject(err);
       } else {
+        console.log(`success ${data}`)
         resolve(data);
       }
+    });
+  }).catch((err) => {
+    console.log("Error", err);
+    return handleResponse(event, {
+      body: JSON.stringify({
+        statusCode: 500,
+        message: err,
+      }),
     });
   });
   console.log(`update item result is ${result}`)
