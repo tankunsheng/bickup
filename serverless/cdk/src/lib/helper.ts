@@ -60,7 +60,7 @@ const verifyAndDecodeJWT = function (jwtString: string, test:any) {
   //2. find the corresponding kid from 'userPoolJWKS' to get the right public key
   //3. convert the public key in jwks to public key pem format
   //4. verify the jwt with this public pem
-  console.log(`passed in type is ${test}`)
+  console.log(`passed in type is ${typeof test}`)
   let decodedJwtUnverified = jwtLib.decode(jwtString, { complete: true });
   if (!decodedJwtUnverified) {
     throw new Error("Cannot find corresponding jwk for the jwt");
@@ -76,7 +76,7 @@ const verifyAndDecodeJWT = function (jwtString: string, test:any) {
   }
   try {
 
-    const pem1 = jwkToBuffer({
+    const pem1 = test({
       e: jwk.e,
       n: jwk.n,
       kty: jwk.kty as "RSA",
