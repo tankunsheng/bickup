@@ -241,11 +241,12 @@ export class BackendStack extends cdk.Stack {
     });
     const jobs = postJobLambdaApi.root.addResource("jobs");
     jobs.addMethod("POST");
-    jobs.addMethod("PATCH", new LambdaIntegration(patchJobFn), {
+   
+    const singleJob = jobs.addResource("{contact_no}");
+    singleJob.addMethod("GET", new LambdaIntegration(getJobFn));
+    singleJob.addMethod("PATCH", new LambdaIntegration(patchJobFn), {
       authorizationType: AuthorizationType.COGNITO,
       authorizer: userPoolAuthorizer
     });
-    const singleJob = jobs.addResource("{contact_no}");
-    singleJob.addMethod("GET", new LambdaIntegration(getJobFn));
   }
 }
