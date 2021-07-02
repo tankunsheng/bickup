@@ -1,5 +1,4 @@
 import * as jwtLib from "jsonwebtoken";
-import * as jwkToBuffer from "jwk-to-pem";
 
 const whitelist: Array<string> = [
   "http://localhost:8000",
@@ -55,12 +54,12 @@ const userPoolJWKS = {
   ],
 };
 
-const verifyAndDecodeJWT = function (jwtString: string, test:any) {
+const verifyAndDecodeJWT = function (jwtString: string, jwkToBuffer:any) {
   //1. decode jwt without verifying, we are interested in looking at the header and getting the kid
   //2. find the corresponding kid from 'userPoolJWKS' to get the right public key
   //3. convert the public key in jwks to public key pem format
   //4. verify the jwt with this public pem
-  console.log(`passed in type is ${typeof test}`)
+  console.log(`passed in type is ${typeof jwkToBuffer}`)
   let decodedJwtUnverified = jwtLib.decode(jwtString, { complete: true });
   if (!decodedJwtUnverified) {
     throw new Error("Cannot find corresponding jwk for the jwt");
@@ -76,22 +75,11 @@ const verifyAndDecodeJWT = function (jwtString: string, test:any) {
   }
   try {
 
-    const pem1 = test({
-      e: jwk.e,
-      n: jwk.n,
-      kty: jwk.kty as "RSA",
-    });
-    console.log(`testing ${pem1}`)
-
-    console.log(`jwkToBuffer type is ${typeof jwkToBuffer}`);
-    console.log(jwkToBuffer);
-    console.log("before jwkToPem");
     const pem = jwkToBuffer({
       e: jwk.e,
       n: jwk.n,
       kty: jwk.kty as "RSA",
     });
-    console.log(pem);
     const decoded = jwtLib.verify(jwtString, pem) as jwtLib.JwtPayload;
     console.log(decoded.email);
     return decoded;
