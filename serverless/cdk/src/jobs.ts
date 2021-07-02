@@ -170,14 +170,13 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
       contact_no: contact_no,
       created_at: created_at,
     },
-    UpdateExpression: "set #driver = :driver and #status = :status",
+    UpdateExpression: "set #driver = :driver, #status = :status",
     ExpressionAttributeNames: { "#driver": "driver" },
     ExpressionAttributeValues: {
       ":driver": decoded.email,
       ":status": "accepted",
     },
   };
-  const headers = event.headers;
 
   //update dynamodb record with the driver's email
   // client.update
