@@ -171,7 +171,7 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
       created_at: created_at,
     },
     UpdateExpression: "set #driver = :driver, #status = :status",
-    ExpressionAttributeNames: { "#driver": "driver", "#statue": "status" },
+    ExpressionAttributeNames: { "#driver": "driver", "#status": "status" },
     ExpressionAttributeValues: {
       ":driver": decoded.email,
       ":status": "accepted",
@@ -180,17 +180,20 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
 
   //update dynamodb record with the driver's email
   // client.update
-  const result = await new Promise((resolve, reject) => {
-    client.update(params, function (err, data) {
-      if (err) {
-        console.log(`error ${err}`)
-        reject(err);
-      } else {
-        console.log(`success ${data}`)
-        resolve(data);
-      }
+  try {
+    const result = await new Promise((resolve, reject) => {
+      client.update(params, function (err, data) {
+        if (err) {
+          console.log(`error ${err}`);
+          reject(err);
+        } else {
+          console.log(`success ${data}`);
+          resolve(data);
+        }
+      });
     });
-  }).catch((err) => {
+    console.log(`update item result is ${result}`);
+  } catch (err) {
     console.log("Error", err);
     return handleResponse(event, {
       body: JSON.stringify({
@@ -198,15 +201,14 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
         message: err,
       }),
     });
-  });
-  console.log(`update item result is ${result}`)
+  }
+
+  
 
   return handleResponse(event, {
     statusCode: 200,
     body: JSON.stringify({
-      message: `job accepted by ${
-        decoded.email
-      }`,
+      message: `job accepted by ${decoded.email}`,
     }),
   });
 };
