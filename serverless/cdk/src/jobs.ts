@@ -177,9 +177,7 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
       ":status": "accepted",
     },
   };
-
-  //update dynamodb record with the driver's email
-  // client.update
+  //todo check status is not accepted, update if not, else return
   try {
     const result = await new Promise((resolve, reject) => {
       client.update(params, function (err, data) {
@@ -203,8 +201,6 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
     });
   }
 
-  
-
   return handleResponse(event, {
     statusCode: 200,
     body: JSON.stringify({
@@ -223,10 +219,6 @@ const handleJobStream = async function (event: any, context: any) {
   var secretsmanager = new AWS.SecretsManager({
     region: "ap-southeast-1",
   });
-  // console.log(event);
-  // console.log(event.Records[0].dynamodb);
-  // console.log(context);
-  // console.log("db stream job");
   const decryptedSecret: any = await new Promise((resolve, reject) => {
     secretsmanager.getSecretValue(
       {
@@ -246,15 +238,17 @@ const handleJobStream = async function (event: any, context: any) {
       "dev-bickup-bot-token"
     ];
     const record = event.Records[0].dynamodb.NewImage;
+    console.log(event.Records[0].dynamodb)
     console.log(record);
     console.log(record.origin);
     console.log(record.id);
+    //todo: accepting job and canceling job post payloads are different
     const response = await axios.post(
       `https://api.telegram.org/bot${botToken}/sendMessage`,
       {
         parse_mode: "HTML",
         chat_id: process.env.CHAT_ID,
-        text: `New Job Created\n<b>Pick up at: ${record.origin.S}</b>\n<a href="${process.env.SERVER}/jobs/${record.contact_no.S}?datetime=${record.created_at.S}">Click to View</a>`,
+        text: `New Job Created\n<b>Pick up at: ${record.origin.S}</b>\n\n<a href="${process.env.SERVER}/jobs/${record.contact_no.S}?datetime=${record.created_at.S}">Click to View</a>`,
         // text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
         //   event.Records[0].dynamodb.NewImage
         // )}`,
