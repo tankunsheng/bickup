@@ -238,21 +238,37 @@ const handleJobStream = async function (event: any, context: any) {
       "dev-bickup-bot-token"
     ];
     const record = event.Records[0].dynamodb.NewImage;
-    console.log(event.Records[0].dynamodb)
+    console.log(event.Records[0].dynamodb);
     console.log(record);
     console.log(record.origin);
     console.log(record.id);
     //todo: accepting job and canceling job post payloads are different
-    const response = await axios.post(
-      `https://api.telegram.org/bot${botToken}/sendMessage`,
-      {
+    let payload;
+    if (
+      event.Records[0].dynamodb.OldImage &&
+      event.Records[0].dynamodb.NewImage.status.S === "accepted" &&
+      (!event.Records[0].dynamodb.OldImage.status ||
+        event.Records[0].dynamodb.OldImage.status.S !== "accepted")
+    ) {
+      //accepting job
+      payload = {
+        parse_mode: "HTML",
+        chat_id: process.env.CHAT_ID,
+        text: `Job Accepted by ${event.Records[0].dynamodb.NewImage.driver.S}\n<b>Pick up at: ${record.origin.S}</b>\n\n<a href="${process.env.SERVER}/jobs/${record.contact_no.S}?datetime=${record.created_at.S}">Click to View</a>`,
+      };
+    } else {
+      payload = {
         parse_mode: "HTML",
         chat_id: process.env.CHAT_ID,
         text: `New Job Created\n<b>Pick up at: ${record.origin.S}</b>\n\n<a href="${process.env.SERVER}/jobs/${record.contact_no.S}?datetime=${record.created_at.S}">Click to View</a>`,
         // text: `${event.Records[0].eventName} event. New data = ${JSON.stringify(
         //   event.Records[0].dynamodb.NewImage
         // )}`,
-      }
+      };
+    }
+    const response = await axios.post(
+      `https://api.telegram.org/bot${botToken}/sendMessage`,
+      payload
     );
     console.log(response);
     return {
