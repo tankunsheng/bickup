@@ -149,7 +149,7 @@ const patchJob = async function(event:APIGatewayProxyEvent, context:any){
       }),
     });
   }
-  const decoded = verifyAndDecodeJWT(idToken)
+  const decoded = verifyAndDecodeJWT(idToken, jwkToBuffer)
   // const reqBody = JSON.parse(event.body);
   const headers = event.headers
   console.log(headers)
