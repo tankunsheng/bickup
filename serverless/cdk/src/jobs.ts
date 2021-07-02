@@ -2,8 +2,13 @@ import axios from "axios";
 import * as AWS from "aws-sdk";
 import { v4 as uuid } from "uuid";
 import { handleResponse, verifyAndDecodeJWT } from "./lib/helper";
-import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda"
+import {
+  APIGatewayProxyEvent,
+  Context,
+  APIGatewayProxyResult,
+} from "aws-lambda";
 import * as jwkToBuffer from "jwk-to-pem";
+import { rejects } from "assert";
 
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
@@ -17,7 +22,7 @@ class BetterDate extends Date {
   }
 }
 const createJob = async function (event: APIGatewayProxyEvent, context: any) {
-  if(!event.body){
+  if (!event.body) {
     return handleResponse(event, {
       statusCode: 400,
       body: JSON.stringify({
@@ -52,7 +57,7 @@ const createJob = async function (event: APIGatewayProxyEvent, context: any) {
       pickupTime,
       numBikes,
       numPax,
-      status: "open"
+      status: "open",
     },
     TableName: process.env.JOBS_TABLE,
   };
@@ -127,11 +132,11 @@ const getJob = async function (event: any, context: any) {
   });
 };
 
-const patchJob = async function(event:APIGatewayProxyEvent, context:any){
+const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
   //header 'Authorizer' will always be provided since apigateway authorizer ensures of this
   //optional check included just in case
-  const idToken = event.headers.Authorizer
-  if(!idToken){
+  const idToken = event.headers.Authorizer;
+  if (!idToken) {
     return handleResponse(event, {
       statusCode: 400,
       body: JSON.stringify({
@@ -139,36 +144,63 @@ const patchJob = async function(event:APIGatewayProxyEvent, context:any){
       }),
     });
   }
- 
-
-  const decoded = verifyAndDecodeJWT(idToken, jwkToBuffer)
-  // const params = {
-  //   TableName: process.env.JOBS_TABLE,
-  //   Key: {
-  //     contact_no: contact_no,
-  //     created_at: created_at,
-  //   },
-  //   UpdateExpression: 'set #driver = :driver and #status = :status',
-  //   ExpressionAttributeNames: {'#driver' : 'driver'},
-  //   ExpressionAttributeValues: {
-  //     ':driver' : decoded.email,
-  //     ':status' : "accepted",
-  //   }
-  // };
-  const headers = event.headers
+  if (!process.env.JOBS_TABLE) {
+    console.log("Jobs table name not specified");
+    return;
+  }
+  if (
+    !event.pathParameters ||
+    !event.pathParameters.contact_no ||
+    !event.queryStringParameters ||
+    !event.queryStringParameters.datetime
+  ) {
+    return handleResponse(event, {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: `Missing required path params or query string`,
+      }),
+    });
+  }
+  const contact_no = event.pathParameters.contact_no;
+  const created_at = event.queryStringParameters.datetime;
+  const decoded = verifyAndDecodeJWT(idToken, jwkToBuffer);
+  const params = {
+    TableName: process.env.JOBS_TABLE,
+    Key: {
+      contact_no: contact_no,
+      created_at: created_at,
+    },
+    UpdateExpression: "set #driver = :driver and #status = :status",
+    ExpressionAttributeNames: { "#driver": "driver" },
+    ExpressionAttributeValues: {
+      ":driver": decoded.email,
+      ":status": "accepted",
+    },
+  };
+  const headers = event.headers;
 
   //update dynamodb record with the driver's email
   // client.update
+  const result = await new Promise((resolve, reject) => {
+    client.update(params, function (err, data) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+  console.log(`update item result is ${result}`)
 
-  
   return handleResponse(event, {
     statusCode: 200,
     body: JSON.stringify({
-      message: `your headers are ${JSON.stringify(headers)} decoded ${decoded.email}`
+      message: `job accepted by ${
+        decoded.email
+      }`,
     }),
   });
-}
-
+};
 
 // telegram restapis reference: https://core.telegram.org/bots/api#making-requests
 // simple messages can be sent in the format of POST https://api.telegram.org/bot1891683701:AAFRELCirvrwZldZ0E-NaWo-4hHx-IS9OJ4/sendMessage
