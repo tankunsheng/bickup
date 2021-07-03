@@ -135,7 +135,7 @@ const getJob = async function (event: any, context: any) {
 const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
   //header 'Authorizer' will always be provided since apigateway authorizer ensures of this
   //optional check included just in case
-  const idToken = event.headers.Authorizer;
+  const idToken = event.headers.authorizer;
   if (!idToken) {
     return handleResponse(event, {
       statusCode: 400,
