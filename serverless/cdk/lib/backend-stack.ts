@@ -214,19 +214,8 @@ export class BackendStack extends cdk.Stack {
       },
       
     });
-    postJobLambdaApi.addGatewayResponse('test-response', {
-      type: ResponseType.ACCESS_DENIED,
-      statusCode: '500',
-      responseHeaders: {
-        'Access-Control-Allow-Origin': "'*'",
-        'test-key': "'test-value'"
-      },
-      templates: {
-        'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
-      }
-    });
-    // postJobLambdaApi.addGatewayResponse('test-response1', {
-    //   type: ResponseType.UNAUTHORIZED,
+    // postJobLambdaApi.addGatewayResponse('test-response', {
+    //   type: ResponseType.ACCESS_DENIED,
     //   statusCode: '500',
     //   responseHeaders: {
     //     'Access-Control-Allow-Origin': "'*'",
@@ -236,6 +225,17 @@ export class BackendStack extends cdk.Stack {
     //     'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
     //   }
     // });
+    postJobLambdaApi.addGatewayResponse('test-response1', {
+      type: ResponseType.UNAUTHORIZED,
+      statusCode: '500',
+      responseHeaders: {
+        'Access-Control-Allow-Origin': "'*'",
+        'test-key': "'test-value'"
+      },
+      templates: {
+        'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
+      }
+    });
     const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
       functionName: `${config.deploymentEnv}-bickup-getjob-fn`,
       runtime: Runtime.NODEJS_14_X,
