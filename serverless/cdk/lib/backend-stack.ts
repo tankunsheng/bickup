@@ -209,7 +209,7 @@ export class BackendStack extends cdk.Stack {
       // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html#cross-origin-resource-sharing-cors
       defaultCorsPreflightOptions: {
         allowOrigins: ["*"],
-        allowHeaders: ["Authorizer"]
+        allowHeaders: ["Authorizer" , "Content-Type"]
       },
     });
     const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
