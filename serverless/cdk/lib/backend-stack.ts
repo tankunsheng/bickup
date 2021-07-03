@@ -209,6 +209,7 @@ export class BackendStack extends cdk.Stack {
       // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html#cross-origin-resource-sharing-cors
       defaultCorsPreflightOptions: {
         allowOrigins: ["*"],
+        allowHeaders: ["Authorizer"]
       },
     });
     const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
@@ -230,6 +231,7 @@ export class BackendStack extends cdk.Stack {
       environment: {
         JOBS_TABLE: config.jobsTable,
       },
+      
     });
     //todo: implement cognito userpool authorizer to protect patchJobFn api
     //https://stackoverflow.com/questions/52726914/aws-cdk-user-pool-authorizer
