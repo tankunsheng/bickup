@@ -249,7 +249,7 @@ export class BackendStack extends cdk.Stack {
     singleJob.addMethod("GET", new LambdaIntegration(getJobFn));
     singleJob.addMethod("PATCH", new LambdaIntegration(patchJobFn), {
       authorizationType: AuthorizationType.COGNITO,
-      authorizer: userPoolAuthorizer
+      authorizer: userPoolAuthorizer 
     });
   }
 }
