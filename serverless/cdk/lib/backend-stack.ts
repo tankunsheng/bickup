@@ -218,7 +218,7 @@ export class BackendStack extends cdk.Stack {
       type: ResponseType.ACCESS_DENIED,
       statusCode: '500',
       responseHeaders: {
-        'Access-Control-Allow-Origin': "'http://localhost:8000', 'http://127.0.0.1:8000'",
+        'Access-Control-Allow-Origin': "'*'",
         'test-key': "'test-value'"
       },
       templates: {
@@ -229,7 +229,7 @@ export class BackendStack extends cdk.Stack {
       type: ResponseType.UNAUTHORIZED,
       statusCode: '500',
       responseHeaders: {
-        'Access-Control-Allow-Origin': "'http://localhost:8000', 'http://127.0.0.1:8000'",
+        'Access-Control-Allow-Origin': "'*'",
         'test-key': "'test-value'"
       },
       templates: {
