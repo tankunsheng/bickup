@@ -219,7 +219,7 @@ export class BackendStack extends cdk.Stack {
       statusCode: '500',
       responseHeaders: {
         'Access-Control-Allow-Origin': "test.com",
-        'test-key': 'test-value'
+        'test-key': "'test-value'"
       },
       templates: {
         'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
@@ -230,7 +230,7 @@ export class BackendStack extends cdk.Stack {
       statusCode: '500',
       responseHeaders: {
         'Access-Control-Allow-Origin': "test.com",
-        'test-key': 'test-value'
+        'test-key': "'test-value'"
       },
       templates: {
         'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
