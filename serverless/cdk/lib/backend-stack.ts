@@ -204,7 +204,7 @@ export class BackendStack extends cdk.Stack {
     const postJobLambdaApi = new LambdaRestApi(this, "bickup-postjob-api", {
       restApiName: `${config.deploymentEnv}-bickup-postjob-api`,
       handler: postJobFn,
-      // proxy: false, //can this be set to true?
+      proxy: false, //can this be set to true?
       deployOptions: { stageName: config.deploymentEnv },
       // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html#cross-origin-resource-sharing-cors
       defaultCorsPreflightOptions: {
