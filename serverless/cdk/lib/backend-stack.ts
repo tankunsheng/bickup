@@ -5,6 +5,7 @@ import {
   LambdaIntegration,
   CognitoUserPoolsAuthorizer,
   AuthorizationType,
+  ResponseType,
 } from "@aws-cdk/aws-apigateway";
 import { Table, AttributeType, StreamViewType } from "@aws-cdk/aws-dynamodb";
 import {
@@ -213,6 +214,28 @@ export class BackendStack extends cdk.Stack {
       },
       
     });
+    postJobLambdaApi.addGatewayResponse('test-response', {
+      type: ResponseType.ACCESS_DENIED,
+      statusCode: '500',
+      responseHeaders: {
+        'Access-Control-Allow-Origin': "test.com",
+        'test-key': 'test-value'
+      },
+      templates: {
+        'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
+      }
+    });
+    postJobLambdaApi.addGatewayResponse('test-response1', {
+      type: ResponseType.UNAUTHORIZED,
+      statusCode: '500',
+      responseHeaders: {
+        'Access-Control-Allow-Origin': "test.com",
+        'test-key': 'test-value'
+      },
+      templates: {
+        'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
+      }
+    });
     const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
       functionName: `${config.deploymentEnv}-bickup-getjob-fn`,
       runtime: Runtime.NODEJS_14_X,
@@ -223,6 +246,7 @@ export class BackendStack extends cdk.Stack {
         JOBS_TABLE: config.jobsTable,
       },
     });
+    
     const patchJobFn = new NodejsFunction(this, "bickup-patchjob-fn", {
       functionName: `${config.deploymentEnv}-bickup-patchjob-fn`,
       runtime: Runtime.NODEJS_14_X,
