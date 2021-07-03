@@ -13,9 +13,29 @@ const callback = ({ location }: any) => {
         //user just signed in and the callback url is hit
         //save token into localstorage and send api request to accept job with token in header
         localStorage.setItem("idToken", idToken);
-
+        const pathAndQs = queryString.parse(window.location.hash).state;
+        console.log(pathAndQs);
+        alert(pathAndQs);
+        axios.patch(
+          `https://gmz7m1aszi.execute-api.ap-southeast-1.amazonaws.com/dev${pathAndQs}`,
+          {},
+          {
+            headers: {
+              Authorizer: idToken,
+            },
+          }
+        ).then(res=>{
+          console.log("response from patch")
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log("eerror why")
+          console.log(err);
+          //check if token expired error and prompt login again?
+          // loginFlow(pathAndQs);
+        });
         // axios.patch()
-      }else{
+      } else {
         //idtoken is missing, error and redirect
       }
     }

@@ -26,6 +26,7 @@ const handleResponse = (request: any, response: any) => {
       // https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html
       "Access-Control-Allow-Origin": whitelistOrigin ?? "", // Required for CORS support to work
       "Access-Control-Allow-Credentials": true, // Required for CORS support to work
+      "Access-Control-Allow-Headers": "Authorizer"
     },
   };
 };
