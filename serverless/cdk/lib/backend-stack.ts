@@ -214,26 +214,19 @@ export class BackendStack extends cdk.Stack {
       },
       
     });
-    // postJobLambdaApi.addGatewayResponse('test-response', {
-    //   type: ResponseType.ACCESS_DENIED,
-    //   statusCode: '500',
-    //   responseHeaders: {
-    //     'Access-Control-Allow-Origin': "'*'",
-    //     'test-key': "'test-value'"
-    //   },
-    //   templates: {
-    //     'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
-    //   }
-    // });
-    postJobLambdaApi.addGatewayResponse('test-response1', {
+    // we need to configure apigateway gateway response as cognito authorizer responses need to have the header 'Access-Control-Allow-Origin' properly configured
+    // or else the client browser will refuse to read the response due to violation of CORS.
+    // errorneuous documentation https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html
+    // solution at https://github.com/aws/serverless-application-model/issues/623 to enclose values in single quotes, e.g "'test-value'"
+    postJobLambdaApi.addGatewayResponse('bickup-api-gateway-response', {
       type: ResponseType.UNAUTHORIZED,
-      statusCode: '500',
+      statusCode: '401',
       responseHeaders: {
         'Access-Control-Allow-Origin': "'*'",
-        'test-key': "'test-value'"
+        // 'test-key': "'test-value'"
       },
       templates: {
-        'application/json': '{ "message": $context.error.messageString, "statusCode": "488", "type": "$context.error.responseType" }'
+        'application/json': '{ "message": $context.error.messageString,  "type": "$context.error.responseType" }'
       }
     });
     const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
