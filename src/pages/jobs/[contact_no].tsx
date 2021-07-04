@@ -50,15 +50,20 @@ const jobPage = ({ params, location }: any) => {
         window.location.href = `https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&state=${stateString}&redirect_uri=http://localhost:8000/login/callback/`;
       }
     };
-    const  isAcceptedByCurrDriver = () =>{
-      const idToken = localStorage.getItem("idToken");
-      if(idToken){
-        const decoded = getTokenDetails(idToken)
-        return decoded.email === job.driver
+    const isAcceptedByCurrDriver = () => {
+      if (typeof window !== "undefined") {
+        const idToken = localStorage.getItem("idToken");
+        if (idToken) {
+          const decoded = getTokenDetails(idToken);
+          return decoded.email === job.driver;
+        }
       }
-      return false
-    }
+      return false;
+    };
     const acceptJob = () => {
+      if (typeof window === "undefined") {
+        return
+      }
       const idToken = localStorage.getItem("idToken");
       const pathAndQs = location.pathname + location.search;
       if (!idToken) {
@@ -94,7 +99,9 @@ const jobPage = ({ params, location }: any) => {
           style={{ width: "100%", textAlign: "center" }}
         >
           {/* todo only show contact to accepted driver */}
-          {isAcceptedByCurrDriver() && <span>Contact No. : {job.contact_no}</span>}
+          {isAcceptedByCurrDriver() && (
+            <span>Contact No. : {job.contact_no}</span>
+          )}
           <span>Pick-up Point: {job.origin}</span>
           Destinations:
           {job.destinations &&
@@ -113,7 +120,8 @@ const jobPage = ({ params, location }: any) => {
             <a onClick={acceptJob}>Accept</a>
           ) : (
             <h2>
-              This job has already been accepted by {isAcceptedByCurrDriver() ? "you": <u>{job.driver}</u>}
+              This job has already been accepted by{" "}
+              {isAcceptedByCurrDriver() ? "you" : <u>{job.driver}</u>}
             </h2>
           )}
         </div>
