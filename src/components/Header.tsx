@@ -27,9 +27,30 @@ export default ({ location }: any) => {
       toPath: "/faq",
     },
   ];
-
+  const renderUserControls = function () {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const idToken = localStorage.getItem("idToken");
+    //if idToken is expired or does not exist
+    if (!idToken) {
+      return (
+        <Menu.Item
+          style={{ marginLeft: "auto" }}
+          onClick={() => {
+            window.location.href = `https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:8000/login/callback/`;
+          }}
+        >
+          Login/Signup
+        </Menu.Item>
+      );
+    } else {
+      //user icon with email?
+      return 
+    }
+  };
   return (
-    <Menu mode="horizontal">
+    <Menu mode="horizontal" style={{ display: "flex" }}>
       {NavLinks.map((eachLink) => {
         return (
           <Menu.Item key={eachLink.label}>
@@ -48,6 +69,7 @@ export default ({ location }: any) => {
           </Menu.Item>
         );
       })}
+      {renderUserControls()}
     </Menu>
   );
 };
