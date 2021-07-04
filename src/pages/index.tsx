@@ -27,7 +27,7 @@ const IndexPage = ({ location }: any) => {
           Our fleet of drivers provide bike transportation. Book now!
         </h2>
         <div className="flex items-center justify-center mt-4">
-          <Button size="large">Book Now</Button>
+          <Button size="large" onClick={()=>window.location.href="/booking"}>Book Now</Button>
         </div>
       </div>
     );

@@ -3,7 +3,7 @@ import { Link } from "gatsby";
 import { Menu } from "antd";
 import { checkTokenExpired, getTokenDetails } from "../lib/helper";
 import { UserOutlined } from "@ant-design/icons";
-
+const { SubMenu } = Menu;
 export default ({ location }: any) => {
   interface INavLinks {
     label: string;
@@ -50,14 +50,20 @@ export default ({ location }: any) => {
     } else {
       //user icon with email?
       return (
-        <Menu.Item style={{ marginLeft: "auto" }}>
-          <UserOutlined
-            style={{
-              fontSize: "x-large",
-            }}
-          />
-          Welcome, <b>{getTokenDetails(idToken).email}</b>
-        </Menu.Item>
+        <SubMenu style={{ marginLeft: "auto" }}
+            key="SubMenu"
+            icon={<UserOutlined />}
+            title={`Welcome, ${getTokenDetails(idToken).email}`}
+          >
+            <Menu.Item onClick={()=>{
+              console.log("LOGOUT!")
+              if (typeof window !== "undefined") {
+                localStorage.removeItem("idToken");
+                window.location.href = "/"
+              }
+            }}>Log out</Menu.Item>
+          </SubMenu>
+        
       );
     }
   };
