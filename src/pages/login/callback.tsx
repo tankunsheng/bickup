@@ -3,9 +3,9 @@ import axios from "axios";
 import queryString from "query-string";
 import { StaticImage } from "gatsby-plugin-image";
 import PageLayout from "../../components/PageLayout";
-import { Button, Space } from "antd";
+import { notification, Space } from "antd";
 const callback = ({ location }: any) => {
-  const CallBack = () => {
+  const CallBack = async () => {
     if (typeof window !== "undefined") {
       let idToken = queryString.parse(window.location.hash).id_token;
       console.log(idToken);
@@ -15,26 +15,39 @@ const callback = ({ location }: any) => {
         localStorage.setItem("idToken", idToken);
         const pathAndQs = queryString.parse(window.location.hash).state;
         console.log(pathAndQs);
-        alert(pathAndQs);
-        axios.patch(
-          `https://gmz7m1aszi.execute-api.ap-southeast-1.amazonaws.com/dev${pathAndQs}`,
-          {},
-          {
-            headers: {
-              Authorizer: idToken,
-            },
-          }
-        ).then(res=>{
-          console.log("response from patch")
-          console.log(res)
-        })
-        .catch((err) => {
-          console.log("eerror why")
-          console.log(err);
-          //check if token expired error and prompt login again?
-          // loginFlow(pathAndQs);
-        });
-        // axios.patch()
+        await axios
+          .patch(
+            `https://gmz7m1aszi.execute-api.ap-southeast-1.amazonaws.com/dev${pathAndQs}`,
+            {},
+            {
+              headers: {
+                Authorizer: idToken,
+              },
+            }
+          )
+          .then((res) => {
+            console.log("response from patch");
+            console.log(res);
+            notification.success({
+              message: `Notification `,
+              description:
+                "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+              placement: "topRight",
+            });
+          })
+          .catch((err) => {
+            notification.error({
+              message: `Notification `,
+              description: err.response.data.message,
+              placement: "topRight",
+            });
+            console.log(err.response);
+            //check if token expired error and prompt login again?
+            // loginFlow(pathAndQs);
+          });
+        setTimeout(function () {
+          window.location.href = `${pathAndQs}`;
+        }, 5000);
       } else {
         //idtoken is missing, error and redirect
       }

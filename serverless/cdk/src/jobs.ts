@@ -4,11 +4,8 @@ import { v4 as uuid } from "uuid";
 import { handleResponse, verifyAndDecodeJWT } from "./lib/helper";
 import {
   APIGatewayProxyEvent,
-  Context,
-  APIGatewayProxyResult,
 } from "aws-lambda";
 import * as jwkToBuffer from "jwk-to-pem";
-import { rejects } from "assert";
 
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
