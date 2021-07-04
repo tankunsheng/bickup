@@ -51,7 +51,7 @@ const callback = ({ location }: any) => {
               window.location.href = `${pathAndQs}`;
             }, 5000);
           } else {
-            //idtoken is missing, error and redirect
+            //todo idtoken is missing, error and redirect to somewhere?
           }
         }
       };
