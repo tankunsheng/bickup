@@ -55,13 +55,11 @@ const userPoolJWKS = {
   ],
 };
 
-const verifyAndDecodeJWT = function (jwtString: string, jwkToBuffer:any) {
+const verifyAndDecodeJWT = function (jwtString: string) {
   //1. decode jwt without verifying, we are interested in looking at the header and getting the kid
   //2. find the corresponding kid from 'userPoolJWKS' to get the right public key
   //3. convert the public key in jwks to public key pem format
   //4. verify the jwt with this public pem
-  console.log(`passed in type is ${typeof jwkToBuffer}`)
-  console.log(jwkToBuffer)
   console.log(`local imported type is ${typeof jwkToPem}`)
   console.log(jwkToPem)
   let decodedJwtUnverified = jwtLib.decode(jwtString, { complete: true });
@@ -79,7 +77,7 @@ const verifyAndDecodeJWT = function (jwtString: string, jwkToBuffer:any) {
   }
   try {
 
-    const pem = jwkToBuffer({
+    const pem = jwkToPem({
       e: jwk.e,
       n: jwk.n,
       kty: jwk.kty as "RSA",

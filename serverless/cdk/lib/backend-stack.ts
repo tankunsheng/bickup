@@ -243,7 +243,7 @@ export class BackendStack extends cdk.Stack {
     const patchJobFn = new NodejsFunction(this, "bickup-patchjob-fn", {
       functionName: `${config.deploymentEnv}-bickup-patchjob-fn`,
       runtime: Runtime.NODEJS_14_X,
-      entry: "./build/src/jobs.js",
+      entry: "./build/src/jobs.js", // for unknown reasons, .ts results in imports not working correctly. use build out js.
       handler: "patchJob",
       role: rwJobsTableLambdaRole,
       environment: {

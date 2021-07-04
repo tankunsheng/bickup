@@ -5,7 +5,6 @@ import { handleResponse, verifyAndDecodeJWT } from "./lib/helper";
 import {
   APIGatewayProxyEvent,
 } from "aws-lambda";
-import * as jwkToBuffer from "jwk-to-pem";
 
 const client = new AWS.DynamoDB.DocumentClient({
   region: "ap-southeast-1",
@@ -160,7 +159,7 @@ const patchJob = async function (event: APIGatewayProxyEvent, context: any) {
   }
   const contact_no = event.pathParameters.contact_no;
   const created_at = event.queryStringParameters.datetime;
-  const decoded = verifyAndDecodeJWT(idToken, jwkToBuffer);
+  const decoded = verifyAndDecodeJWT(idToken);
   const params = {
     TableName: process.env.JOBS_TABLE,
     Key: {
