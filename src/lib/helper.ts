@@ -1,7 +1,10 @@
 import jwt_decode from "jwt-decode";
 
 const getTokenDetails = function (idTokenString: string) {
-  console.log(jwt_decode(idTokenString));
-  return jwt_decode<{email: string}>(idTokenString);
+  return jwt_decode<{ email: string; expiry: number }>(idTokenString);
 };
-export { getTokenDetails };
+const checkTokenExpired = function (idTokenString: string) {
+  const decoded = getTokenDetails(idTokenString);
+  return decoded.expiry * 1000 <= new Date().getTime();
+};
+export { getTokenDetails, checkTokenExpired };

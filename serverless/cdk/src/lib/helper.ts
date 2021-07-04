@@ -1,5 +1,5 @@
 import * as jwtLib from "jsonwebtoken";
-
+import * as jwkToPem from "jwk-to-pem";
 const whitelist: Array<string> = [
   "http://localhost:8000",
   "http://127.0.0.1:8000",
@@ -61,6 +61,9 @@ const verifyAndDecodeJWT = function (jwtString: string, jwkToBuffer:any) {
   //3. convert the public key in jwks to public key pem format
   //4. verify the jwt with this public pem
   console.log(`passed in type is ${typeof jwkToBuffer}`)
+  console.log(jwkToBuffer)
+  console.log(`local imported type is ${typeof jwkToPem}`)
+  console.log(jwkToPem)
   let decodedJwtUnverified = jwtLib.decode(jwtString, { complete: true });
   if (!decodedJwtUnverified) {
     throw new Error("Cannot find corresponding jwk for the jwt");

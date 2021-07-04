@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "gatsby";
 import { Menu } from "antd";
+import { checkTokenExpired, getTokenDetails } from "../lib/helper";
+import { UserOutlined } from "@ant-design/icons";
 
 export default ({ location }: any) => {
   interface INavLinks {
@@ -33,7 +35,8 @@ export default ({ location }: any) => {
     }
     const idToken = localStorage.getItem("idToken");
     //if idToken is expired or does not exist
-    if (!idToken) {
+
+    if (!idToken || checkTokenExpired(idToken)) {
       return (
         <Menu.Item
           style={{ marginLeft: "auto" }}
@@ -46,7 +49,16 @@ export default ({ location }: any) => {
       );
     } else {
       //user icon with email?
-      return 
+      return (
+        <Menu.Item style={{ marginLeft: "auto" }}>
+          <UserOutlined
+            style={{
+              fontSize: "x-large",
+            }}
+          />
+          Welcome, <b>{getTokenDetails(idToken).email}</b>
+        </Menu.Item>
+      );
     }
   };
   return (
