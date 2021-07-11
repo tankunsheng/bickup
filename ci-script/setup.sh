@@ -1,3 +1,4 @@
+# https://stackoverflow.com/questions/60298619/awscli-version-2-on-alpine-linux
 export GLIBC_VER=2.31-r0
 
 # install glibc compatibility for alpine
@@ -27,3 +28,7 @@ apk --no-cache add \
         binutils \
         curl \
     && rm -rf /var/cache/apk/*
+
+# required to install these dependencies not included in node:lts-alpine image after introducing 1909033e
+# which included the following js deps "gatsby-plugin-image", "gatsby-plugin-sharp", "gatsby-source-filesystem", "gatsby-transformer-sharp"
+apk add --no-cache autoconf automake libtool build-base nasm pkgconf
