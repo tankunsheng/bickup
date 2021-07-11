@@ -52,7 +52,7 @@ const callback = ({ location }: any) => {
           });
         setTimeout(function () {
           window.location.href = `${pathAndQs}`;
-        }, 5000);
+        }, 3000);
       };
       const pathAndQs = queryString.parse(window.location.hash).state;
       const idToken = setTokenInLocalStorage();

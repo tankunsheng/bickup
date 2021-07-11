@@ -3,16 +3,13 @@ import moment from "moment";
 import axios from "axios";
 import PageLayout from "../components/PageLayout";
 import "../css/booking.scoped.scss";
-import { Form, Input, Button, DatePicker, InputNumber, TimePicker } from "antd";
+import { Form, Input, Button, DatePicker, InputNumber, TimePicker, notification } from "antd";
 import "../css/index.css";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 const IndexPage = ({ location }: any) => {
   const onFinish = (values: any) => {
-    console.log("Success:", values);
     const pickupTime = moment(values.pickupTime).format("HH:mm");
     const pickupDate = moment(values.pickupTime).format("MMMM Do YYYY");
-    console.log(pickupTime);
-    console.log(pickupDate);
     axios
       .post(
         "https://gmz7m1aszi.execute-api.ap-southeast-1.amazonaws.com/dev/jobs",
@@ -24,7 +21,24 @@ const IndexPage = ({ location }: any) => {
       )
       .then((response) => {
         console.log("success", response);
-      });
+        notification.success({
+          message: `You have posted a job`,
+          description:
+            "A driver will contact you soon",
+          placement: "topRight",
+        });
+        setTimeout(()=>{
+          window.location.href = "";
+        },3000)
+      }).catch(err=>{
+        console.log(err)
+        notification.error({
+          message: `Error`,
+          description:
+            "Error =(",
+          placement: "topRight",
+        });
+      })
   };
   const Index = () => {
     const smallFormInputStyle: React.CSSProperties = {
