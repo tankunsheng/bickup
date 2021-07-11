@@ -23,5 +23,5 @@ deploy:
     - cd serverless/cdk
     - npm ci
     - npm run deploy:dev
-    - aws cloudfront create-invalidation --distribution-id "$CLOUDFRONT_DIST_ID"  "/index.html"
+    - aws cloudfront create-invalidation --distribution-id "$CLOUDFRONT_DIST_ID" --paths "/*"
 
