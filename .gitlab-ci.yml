@@ -8,6 +8,8 @@ deploy:
   before_script:
     # required to install these dependencies not included in node:lts-alpine image after introducing 1909033e
     # which included the following js deps "gatsby-plugin-image", "gatsby-plugin-sharp", "gatsby-source-filesystem", "gatsby-transformer-sharp"
+    - ls -alth ./ci-script/setup.sh
+    - chmod 755 ./ci-script/setup.sh
     - ./ci-script/setup.sh    
     - apk add --no-cache autoconf automake libtool build-base nasm pkgconf
     - npm ci
