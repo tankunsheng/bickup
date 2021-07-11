@@ -1,11 +1,7 @@
 import * as jwtLib from "jsonwebtoken";
 import * as jwkToPem from "jwk-to-pem";
-const whitelist: Array<string> = [
-  "http://localhost:8000",
-  "http://127.0.0.1:8000",
-  "http://dev-static-bickup.s3-website-ap-southeast-1.amazonaws.com",
-  "http://dev-bickup-static-site.s3-website-ap-southeast-1.amazonaws.com",
-];
+import config from "../../lib/config"
+const whitelist: Array<string> = config.corsWhitelist;
 const checkIfOriginIsCorsWhitelisted = (
   whitelist: Array<string>,
   origin: string

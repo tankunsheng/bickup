@@ -33,6 +33,7 @@ export default ({ location }: any) => {
     if (typeof window === "undefined") {
       return;
     }
+    console.log(location)
     const idToken = localStorage.getItem("idToken");
     //if idToken is expired or does not exist
 
@@ -41,7 +42,7 @@ export default ({ location }: any) => {
         <Menu.Item
           style={{ marginLeft: "auto" }}
           onClick={() => {
-            window.location.href = `https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:8000/login/callback/`;
+            window.location.href = `https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${location.href}login/callback/`;
           }}
         >
           Login/Signup

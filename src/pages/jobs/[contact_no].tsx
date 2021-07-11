@@ -47,7 +47,7 @@ const jobPage = ({ params, location }: any) => {
     const loginFlow = (stateString: string) => {
       console.log(`statestring is ${stateString}`);
       if (typeof window !== "undefined") {
-        window.location.href = `https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&state=${stateString}&redirect_uri=http://localhost:8000/login/callback/`;
+        window.location.href = `https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&state=${stateString}&redirect_uri=${location.href}login/callback/`;
       }
     };
     const isAcceptedByCurrDriver = () => {

@@ -66,7 +66,7 @@ export class BackendStack extends cdk.Stack {
     });
     this.userPoolClient = new UserPoolClient(this, "bickup-user-pool-client", {
       oAuth: {
-        callbackUrls: ["http://localhost:8000/login/callback"],
+        callbackUrls: ["http://localhost:8000/login/callback"], //need to add callback for dev env. required to setup cloudfront with acm in front of bucket since 'https' is mandated
       },
       userPool: this.userPool,
       userPoolClientName: `${config.deploymentEnv}-bickup-user-pool-client`,
