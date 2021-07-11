@@ -73,7 +73,7 @@ export class BackendStack extends cdk.Stack {
       oAuth: {
         callbackUrls: [
           "http://localhost:8000/login/callback",
-          `https://${frontEndCloudFrontDomain}`,
+          `https://${frontEndCloudFrontDomain}/login/callback`,
         ], //need to add callback for dev env. required to setup cloudfront with acm in front of bucket since 'https' is mandated
       },
       userPool: this.userPool,

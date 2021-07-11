@@ -3,11 +3,6 @@ image: node:lts-alpine
 variables:
   ENVIRONMENT: $CI_COMMIT_BRANCH
 
-# test-job:
-#   stage: test
-#   script:
-#     - echo "This job tests something"
-
 deploy:
   stage: deploy
   before_script:
@@ -25,11 +20,5 @@ deploy:
     - cd serverless/cdk
     - npm ci
     - npm run deploy:dev
+    - aws cloudfront create-invalidation --distribution-id "$CLOUDFRONT_DIST_ID"  "/index.html"
 
-# deploy-api:
-#   stage: deploy
-#   before_script:
-#     - cd serverless/api
-#     - npm ci
-#   script:
-#     - ENVIRONMENT="$ENVIRONMENT" npm run sls:deploy

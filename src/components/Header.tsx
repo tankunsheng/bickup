@@ -12,7 +12,7 @@ export default ({ location }: any) => {
   }
   const NavLinks: Array<INavLinks> = [
     {
-      label: "What we do",
+      label: "BICKUP",
       toPath: "/",
       isRootPath: true,
     },
@@ -42,7 +42,7 @@ export default ({ location }: any) => {
         <Menu.Item
           style={{ marginLeft: "auto" }}
           onClick={() => {
-            window.location.href = `https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${location.href}login/callback/`;
+            window.location.href = `https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=${location.origin}/login/callback/`;
           }}
         >
           Login/Signup

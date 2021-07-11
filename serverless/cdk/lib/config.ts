@@ -3,6 +3,7 @@ const baseConfig = {
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://dev-bickup-static-site.s3-website-ap-southeast-1.amazonaws.com",
+    "https://d3bojbdeh120he.cloudfront.net",
   ],
 };
 const config = {
@@ -12,8 +13,8 @@ const config = {
     chatId: "-1001555317155",
     botTokenARN:
       "arn:aws:secretsmanager:ap-southeast-1:860039660571:secret:dev/bickup/bot/token-WvawqR",
-    server:
-      "http://dev-bickup-static-site.s3-website-ap-southeast-1.amazonaws.com",
+    server: "https://d3bojbdeh120he.cloudfront.net",
+    // "http://dev-bickup-static-site.s3-website-ap-southeast-1.amazonaws.com",
     // server: "http://127.0.0.1:8000" //local dev
   },
   prod: {
