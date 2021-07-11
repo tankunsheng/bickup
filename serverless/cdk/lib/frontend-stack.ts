@@ -11,6 +11,7 @@ export class FrontendStack extends cdk.Stack {
       publicReadAccess: true,
       removalPolicy: RemovalPolicy.RETAIN,
       websiteIndexDocument: "index.html",
+      websiteErrorDocument: "index.html", // client side routing if document is not found in bucket
       bucketName: `${config.deploymentEnv}-bickup-static-site`
     });
     new s3Deployment.BucketDeployment(this, "bickup-static-site-deployment", {
