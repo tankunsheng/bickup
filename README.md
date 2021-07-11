@@ -48,5 +48,11 @@ Ensure aws credentials are set, then
 ---
 ## References
 
+### Bickup Web App
+https://d3bojbdeh120he.cloudfront.net/
+
+### Telegram Job Chat
+https://t.me/joinchat/-pTNF3FtpQQ0ZGM1
+
 ### Gitlab CICD
 https://about.gitlab.com/blog/2021/02/05/ci-deployment-and-environments/
