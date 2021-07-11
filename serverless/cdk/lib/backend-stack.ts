@@ -29,14 +29,19 @@ export class BackendStack extends cdk.Stack {
   userPool: UserPool;
   userPoolClient: UserPoolClient;
   dynamoDbJobsTable: Table;
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(
+    scope: cdk.Construct,
+    id: string,
+    frontEndCloudFrontDomain: string,
+    props?: cdk.StackProps
+  ) {
     super(scope, id, props);
-    this.createUserPool();
+    this.createUserPool(frontEndCloudFrontDomain);
     const table = this.createDynamoDb();
     this.createDynamoDbStreams(table);
     this.createLambdaFunctions();
   }
-  createUserPool() {
+  createUserPool(frontEndCloudFrontDomain: string) {
     // Cognito User Pool with Email Sign-in Type.
     this.userPool = new UserPool(this, "bickup-user-pool", {
       userPoolName: `${config.deploymentEnv}-bickup-user-pool`,
@@ -66,7 +71,10 @@ export class BackendStack extends cdk.Stack {
     });
     this.userPoolClient = new UserPoolClient(this, "bickup-user-pool-client", {
       oAuth: {
-        callbackUrls: ["http://localhost:8000/login/callback"], //need to add callback for dev env. required to setup cloudfront with acm in front of bucket since 'https' is mandated
+        callbackUrls: [
+          "http://localhost:8000/login/callback",
+          `https://${frontEndCloudFrontDomain}`,
+        ], //need to add callback for dev env. required to setup cloudfront with acm in front of bucket since 'https' is mandated
       },
       userPool: this.userPool,
       userPoolClientName: `${config.deploymentEnv}-bickup-user-pool-client`,
@@ -210,24 +218,24 @@ export class BackendStack extends cdk.Stack {
       // https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html#cross-origin-resource-sharing-cors
       defaultCorsPreflightOptions: {
         allowOrigins: ["*"],
-        allowHeaders: ["Authorizer" , "Content-Type"]
+        allowHeaders: ["Authorizer", "Content-Type"],
       },
-      
     });
     // we need to configure apigateway gateway response as cognito authorizer responses need to have the header 'Access-Control-Allow-Origin' properly configured
     // or else the client browser will refuse to read the response due to violation of CORS.
     // errorneuous documentation https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html
     // solution at https://github.com/aws/serverless-application-model/issues/623 to enclose values in single quotes, e.g "'test-value'"
-    postJobLambdaApi.addGatewayResponse('bickup-api-gateway-response', {
+    postJobLambdaApi.addGatewayResponse("bickup-api-gateway-response", {
       type: ResponseType.UNAUTHORIZED,
-      statusCode: '401',
+      statusCode: "401",
       responseHeaders: {
-        'Access-Control-Allow-Origin': "'*'",
+        "Access-Control-Allow-Origin": "'*'",
         // 'test-key': "'test-value'"
       },
       templates: {
-        'application/json': '{ "message": $context.error.messageString,  "type": "$context.error.responseType" }'
-      }
+        "application/json":
+          '{ "message": $context.error.messageString,  "type": "$context.error.responseType" }',
+      },
     });
     const getJobFn = new NodejsFunction(this, "bickup-getjob-fn", {
       functionName: `${config.deploymentEnv}-bickup-getjob-fn`,
@@ -239,7 +247,7 @@ export class BackendStack extends cdk.Stack {
         JOBS_TABLE: config.jobsTable,
       },
     });
-    
+
     const patchJobFn = new NodejsFunction(this, "bickup-patchjob-fn", {
       functionName: `${config.deploymentEnv}-bickup-patchjob-fn`,
       runtime: Runtime.NODEJS_14_X,
@@ -249,24 +257,27 @@ export class BackendStack extends cdk.Stack {
       environment: {
         JOBS_TABLE: config.jobsTable,
       },
-      
     });
     //implement cognito userpool authorizer to protect patchJobFn api
     //https://stackoverflow.com/questions/52726914/aws-cdk-user-pool-authorizer
     //https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-apigateway.CognitoUserPoolsAuthorizer.html
-    const userPoolAuthorizer = new CognitoUserPoolsAuthorizer(this, "bickup-api-authorizer", {
-      cognitoUserPools: [this.userPool],
-      authorizerName: `${config.deploymentEnv}-bickup-patchjob-authorizer`,
-      identitySource: "method.request.header.Authorizer"
-    });
+    const userPoolAuthorizer = new CognitoUserPoolsAuthorizer(
+      this,
+      "bickup-api-authorizer",
+      {
+        cognitoUserPools: [this.userPool],
+        authorizerName: `${config.deploymentEnv}-bickup-patchjob-authorizer`,
+        identitySource: "method.request.header.Authorizer",
+      }
+    );
     const jobs = postJobLambdaApi.root.addResource("jobs");
     jobs.addMethod("POST");
-   
+
     const singleJob = jobs.addResource("{contact_no}");
     singleJob.addMethod("GET", new LambdaIntegration(getJobFn));
     singleJob.addMethod("PATCH", new LambdaIntegration(patchJobFn), {
       authorizationType: AuthorizationType.COGNITO,
-      authorizer: userPoolAuthorizer 
+      authorizer: userPoolAuthorizer,
     });
   }
 }
