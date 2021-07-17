@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import PageLayout from "../../components/PageLayout";
-import { Space } from "antd";
+import { Space, Button } from "antd";
 import "../../css/index.css";
 
 import { getTokenDetails } from "../../lib/helper";
@@ -63,7 +63,7 @@ const jobPage = ({ params, location }: any) => {
     };
     const acceptJob = () => {
       if (typeof window === "undefined") {
-        return
+        return;
       }
       const idToken = localStorage.getItem("idToken");
       const pathAndQs = location.pathname + location.search;
@@ -115,10 +115,12 @@ const jobPage = ({ params, location }: any) => {
           <span>Pick-up Time: {job.pickupTime}</span>
           <span>Status: {job.status}</span>
         </Space>
-         
-        <div className="flex items-center justify-center mt-4">
+        <br /> <br />
+        <div className="flex items-center justify-center">
           {job.status !== "accepted" ? (
-            <a onClick={acceptJob}>Accept</a>
+            <Button size="large" type="primary" onClick={acceptJob}>
+              Accept
+            </Button>
           ) : (
             <h2>
               This job has already been accepted by{" "}

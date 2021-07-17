@@ -72,9 +72,9 @@ const callback = ({ location }: any) => {
       <div>
         <Space direction="vertical">
           <StaticImage
-            src="../images/icon.png"
-            alt="A dinosaur"
-            width={256}
+            src="../images/bickup.png"
+            alt="bickup"
+            width={512}
             className="mb-12"
           />
         </Space>
