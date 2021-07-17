@@ -64,13 +64,15 @@ Project automated deployment is ran through Gitlab CI in gitlab.com (refer to gi
 
 ---
 
-## References
+## Demo
 
 ### Bickup Web App
+Submit Jobs here!
 
 https://d3bojbdeh120he.cloudfront.net/
 
 ### Telegram Job Chat
+Join the telegram chat as a "driver" to receive alerts on Job Postings submitted from the Web App!
 
 https://t.me/joinchat/-pTNF3FtpQQ0ZGM1
 
