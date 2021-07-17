@@ -24,10 +24,10 @@ export default ({ location }: any) => {
       label: "Book Now",
       toPath: "/booking",
     },
-    {
-      label: "FAQ",
-      toPath: "/faq",
-    },
+    // {
+    //   label: "FAQ",
+    //   toPath: "/faq",
+    // },
   ];
   const renderUserControls = function () {
     if (typeof window === "undefined") {

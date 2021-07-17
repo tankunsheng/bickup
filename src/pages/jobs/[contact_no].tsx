@@ -115,7 +115,7 @@ const jobPage = ({ params, location }: any) => {
           <span>Pick-up Time: {job.pickupTime}</span>
           <span>Status: {job.status}</span>
         </Space>
-            {`https://dev-bickup.auth.ap-southeast-1.amazoncognito.com/login?client_id=u0ktona8tfa865dom9oh63lfi&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&state=&redirect_uri=${location.origin}/login/callback/`}
+         
         <div className="flex items-center justify-center mt-4">
           {job.status !== "accepted" ? (
             <a onClick={acceptJob}>Accept</a>

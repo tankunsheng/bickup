@@ -13,11 +13,7 @@ import {
   notification,
 } from "antd";
 import "../css/index.css";
-import {
-  MinusCircleOutlined,
-  PlusOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 const IndexPage = ({ location }: any) => {
   const onFinish = (values: any) => {
     const pickupTime = moment(values.pickupTime).format("HH:mm");
@@ -59,7 +55,7 @@ const IndexPage = ({ location }: any) => {
 
     return (
       <>
-        <div>
+        <div style={{ marginBottom: "2em" }}>
           Please enter your job details below and a driver will contact you at
           your Phone Number
         </div>
