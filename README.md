@@ -59,6 +59,9 @@ Generate build CDK in Typescript (Deploys build from frontend + Backend lambdas 
     1. Frontend Stack deploys generated build from frontend into S3
     2. Backend Stack deploys all other AWS resources (refer to archi above)
 
+## CICD
+Project automated deployment is ran through Gitlab CI in gitlab.com (refer to gitlab-ci.yml file) and not through Github Actions. The repo in Github is plainly for viewing.
+
 ---
 
 ## References
