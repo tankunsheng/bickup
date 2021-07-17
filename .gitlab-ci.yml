@@ -15,7 +15,6 @@ deploy:
     - export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
     - export AWS_DEFAULT_REGION=ap-southeast-1
   script:
-    - echo $AWS_ACCESS_KEY_ID
     - cd serverless/cdk
     - npm ci
     - npm run deploy:dev

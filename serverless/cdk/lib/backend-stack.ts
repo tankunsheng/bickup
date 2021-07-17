@@ -230,7 +230,6 @@ export class BackendStack extends cdk.Stack {
       statusCode: "401",
       responseHeaders: {
         "Access-Control-Allow-Origin": "'*'",
-        // 'test-key': "'test-value'"
       },
       templates: {
         "application/json":
