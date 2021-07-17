@@ -76,3 +76,6 @@ Join the telegram chat as a "driver" to receive alerts on Job Postings submitted
 
 https://t.me/joinchat/-pTNF3FtpQQ0ZGM1
 
+## Todos
+- Change job status reject/complete job 
+- View all job listings for logged in drivers
